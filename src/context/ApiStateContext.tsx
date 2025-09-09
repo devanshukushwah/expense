@@ -3,24 +3,24 @@
 import { AppConstants } from "@/common/AppConstants";
 import { createContext, useReducer, useContext } from "react";
 import { ApiContextType } from "../common/ApiContextType";
+import { Category } from "@/collection/Category.collection";
 
 type ApiState = {
   loading: {
     fetchSpend: boolean;
+    addSpend: boolean;
   };
+  categories: Category[];
 };
 
 // Add other action types here as needed
 
 const initialState: ApiState = {
-  categories: [
-    { title: "TRAVEL", _id: 1 },
-    { title: "RENT", _id: 2 },
-    { title: "GROCERIES", _id: 3 },
-  ],
   loading: {
     fetchSpend: false,
+    addSpend: false,
   },
+  categories: [],
 };
 
 function apiReducer(state: ApiState, action: any): ApiState {
@@ -28,6 +28,28 @@ function apiReducer(state: ApiState, action: any): ApiState {
     case ApiContextType.FETCH_SPEND:
       return {
         ...state,
+      };
+
+    case ApiContextType.START_ADD_SPEND:
+      return {
+        ...state,
+        loading: {
+          ...state.loading,
+          addSpend: true,
+        },
+      };
+    case ApiContextType.STOP_ADD_SPEND:
+      return {
+        ...state,
+        loading: {
+          ...state.loading,
+          addSpend: false,
+        },
+      };
+    case ApiContextType.SET_CATEGORIES:
+      return {
+        ...state,
+        categories: action.payload.categories,
       };
     default:
       throw new Error(`Unhandled action: ${(action as any).type}`);

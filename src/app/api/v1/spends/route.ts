@@ -3,6 +3,7 @@ import { responseOkWithData } from "@/lib/ResponseEntity";
 import { withAuth } from "@/lib/withAuth";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
+import { Spend } from "@/collection/Spend.collection";
 
 export const GET = withAuth(async (request) => {
   const client = await clientPromise;
@@ -35,19 +36,19 @@ export const POST = withAuth(async (request) => {
   const collection = db.collection(AppConstants.COLLECTION.SPENDS);
 
   const data = await request.json();
-  const { amt, cat, desc } = data;
+  const { amt, catId, desc } = data;
   const user = request.user;
 
-  if (!amt || !cat) {
+  if (!amt || !catId) {
     return new Response(JSON.stringify({ error: "invalid data" }), {
       status: 400,
       headers: { "Content-Type": "application/json" },
     });
   }
 
-  let newSpend = {
-    amt,
-    cat,
+  let newSpend: Spend = {
+    amt: parseFloat(amt),
+    catId,
     desc,
     createdBy: new ObjectId(user._id),
     createdAt: new Date(),

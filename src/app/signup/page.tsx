@@ -140,6 +140,7 @@ export default function LoginPage() {
               color="primary"
               fullWidth
               disabled={loading}
+              loading={loading}
             >
               Register
             </Button>

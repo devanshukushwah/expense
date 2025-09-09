@@ -18,15 +18,16 @@ import React, { useEffect } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { displayPersonName } from "@/utils/PersonUtils";
 import { AppConstants } from "../common/AppConstants";
+import { Spend } from "@/collection/Spend.collection";
 
-const defaultValue = () => ({
+const defaultValue = (): Spend => ({
   desc: "",
   amt: null,
-  cat: null,
+  catId: null,
 });
 
 function Spend({ categories, onSubmit, loading, item = null }) {
-  const [spend, setSpend] = React.useState(defaultValue());
+  const [spend, setSpend] = React.useState<Spend>(null);
 
   const handleChange = (e) => {
     setSpend({ ...spend, [e.target.name]: e.target.value });
@@ -66,16 +67,16 @@ function Spend({ categories, onSubmit, loading, item = null }) {
       />
       <TextField
         label="Category"
-        name="cat"
+        name="catId"
         fullWidth
         select
         variant="outlined"
-        value={spend?.cat}
+        value={spend?.catId}
         onChange={handleChange}
         size="small"
       >
         {categories?.map((category) => (
-          <MenuItem key={category._id} value={category._id}>
+          <MenuItem key={category.catId} value={category.catId}>
             <ListItemText primary={category.title} />
           </MenuItem>
         ))}
@@ -94,7 +95,7 @@ function Spend({ categories, onSubmit, loading, item = null }) {
         variant="contained"
         color="primary"
         loading={loading}
-        disabled={!spend?.cat || !spend?.amt}
+        disabled={!spend?.catId || !spend?.amt}
       >
         {item ? "Save Changes" : "Add Spend"}
       </Button>
