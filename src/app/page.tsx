@@ -1,17 +1,15 @@
 "use client";
 
-import Image from "next/image";
-import styles from "./page.module.css";
+import { Spend as SpendInterface } from "@/collection/Spend.collection";
+import { ApiContextType } from "@/common/ApiContextType";
 import Header from "@/components/Header";
-import { Container } from "@mui/material";
 import Spend from "@/components/Spend";
 import { useApiDispatch, useApiState } from "@/context/ApiStateContext";
+import { getCategories } from "@/services/categories.service";
 import { createSpend } from "@/services/spends.service";
 import LazyInvoke from "@/utils/LazyInvoke";
-import { Spend as SpendInterface } from "@/collection/Spend.collection";
-import React, { use, useEffect } from "react";
-import { getCategories } from "@/services/categories.service";
-import { ApiContextType } from "@/common/ApiContextType";
+import { Container } from "@mui/material";
+import React, { useEffect } from "react";
 
 const defaultValue = (): SpendInterface => ({
   desc: "",

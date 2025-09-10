@@ -15,30 +15,26 @@ import { HttpUrlConfig } from "../../core/HttpUrlConfig";
 import { useRouter } from "next/navigation";
 import { useLocalStorage } from "usehooks-ts";
 import { AppConstants } from "../../common/AppConstants";
+import LazyInvoke from "@/utils/LazyInvoke";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [token, setToken, removeToken] = useLocalStorage("token", null);
+  const [, setToken] = useLocalStorage<string | null>("token", null);
   const [loading, setLoading] = useState(false);
 
   const startLoading = () => {
     setLoading(true);
   };
 
-  const stopLoading = ({ callback, timeout }) => {
-    setTimeout(() => {
-      setLoading(false);
-      if (typeof callback === "function") {
-        callback();
-      }
-    }, timeout || AppConstants.TIME_TO_STOP_BUTTON_LOADING); // Simulate a delay for loading state
+  const stopLoading = () => {
+    setLoading(false);
   };
 
   const router = useRouter(); // ✅ initialize router
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // Basic validation
@@ -49,22 +45,27 @@ export default function LoginPage() {
     startLoading(); // Start loading state
 
     try {
-      const response = await axios.post(HttpUrlConfig.getLoginUrl(), {
-        email,
-        password,
-      });
+      const response = await axios.post<{ token: string }>(
+        HttpUrlConfig.getLoginUrl(),
+        {
+          email,
+          password,
+        }
+      );
       const token = response.data.token;
       // Save token in localStorage
       setToken(token); // Update local state with the token
       setError(""); // Clear any previous error
-      stopLoading({ callback: () => router.push("/") }); // Stop loading state
-    } catch (err) {
-      if (err.response && err.response.status === 401) {
-        setError(err.response.data.error);
-      } else {
-        setError("An error occurred while logging in. Please try again.");
+      LazyInvoke({ callback: () => router.push("/") });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        if (err.response && err.response.status === 401) {
+          setError(err.response.data.error);
+        } else {
+          setError("An error occurred while logging in. Please try again.");
+        }
+        stopLoading();
       }
-      stopLoading({ timeout: 0 }); // Stop loading state
     }
   };
 

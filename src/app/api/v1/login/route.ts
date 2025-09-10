@@ -1,14 +1,16 @@
-import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
-import { cookies } from "next/headers";
+"use server";
+
 import { AppConstants } from "@/common/AppConstants";
 import clientPromise from "@/lib/mongodb";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { NextRequest, NextResponse } from "next/server";
 
 const SECRET = process.env.JWT_SECRET || "secret-nahi-hai";
 
-export async function POST(req) {
-  const { email, password } = await req.json();
+export async function POST(req: NextRequest): Promise<Response> {
+  const { email, password }: { email: string; password: string } =
+    await req.json();
 
   if (!email || !password) {
     return new Response(JSON.stringify({ error: "invalid data" }), {
@@ -22,7 +24,12 @@ export async function POST(req) {
   const collection = db.collection(AppConstants.COLLECTION.USERS);
 
   const emailLower = email.toLowerCase();
-  const user = await collection.findOne({
+  const user = await collection.findOne<{
+    _id: string;
+    email: string;
+    password: string;
+    isGuest?: boolean;
+  }>({
     email: emailLower,
   });
 
@@ -33,7 +40,8 @@ export async function POST(req) {
     );
   }
 
-  if (!user || !(await bcrypt.compare(password, user.password))) {
+  const passwordMatch = await bcrypt.compare(password, user.password);
+  if (!passwordMatch) {
     return NextResponse.json(
       { error: "Password incorrect", success: false },
       { status: 401 }

@@ -1,9 +1,8 @@
 "use client";
 
-import { AppConstants } from "@/common/AppConstants";
-import { createContext, useReducer, useContext } from "react";
-import { ApiContextType } from "../common/ApiContextType";
 import { Category } from "@/collection/Category.collection";
+import { createContext, useContext, useReducer } from "react";
+import { ApiContextType } from "../common/ApiContextType";
 
 type ApiState = {
   loading: {
@@ -12,6 +11,15 @@ type ApiState = {
   };
   categories: Category[];
 };
+
+type ApiAction =
+  | { type: ApiContextType.FETCH_SPEND }
+  | { type: ApiContextType.START_ADD_SPEND }
+  | { type: ApiContextType.STOP_ADD_SPEND }
+  | {
+      type: ApiContextType.SET_CATEGORIES;
+      payload: { categories: Category[] };
+    };
 
 // Add other action types here as needed
 
@@ -23,7 +31,7 @@ const initialState: ApiState = {
   categories: [],
 };
 
-function apiReducer(state: ApiState, action: any): ApiState {
+function apiReducer(state: ApiState, action: ApiAction): ApiState {
   switch (action.type) {
     case ApiContextType.FETCH_SPEND:
       return {
@@ -52,7 +60,7 @@ function apiReducer(state: ApiState, action: any): ApiState {
         categories: action.payload.categories,
       };
     default:
-      throw new Error(`Unhandled action: ${(action as any).type}`);
+      throw new Error(`Unhandled action: ${action.type}`);
   }
 }
 

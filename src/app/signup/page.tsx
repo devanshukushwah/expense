@@ -1,20 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { AppConstants } from "@/common/AppConstants";
+import { HttpUrlConfig } from "@/core/HttpUrlConfig";
 import {
+  Alert,
   Box,
-  TextField,
   Button,
-  Typography,
   Container,
   Paper,
-  Alert,
   Stack,
+  TextField,
+  Typography,
 } from "@mui/material";
 import axios from "axios";
-import { HttpUrlConfig } from "@/core/HttpUrlConfig";
-import { AppConstants } from "@/common/AppConstants";
-import App from "next/app";
+import { useState } from "react";
 
 export default function LoginPage() {
   const [firstName, setFirstName] = useState("");

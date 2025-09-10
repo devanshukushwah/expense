@@ -1,10 +1,30 @@
+"use server";
+
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { AppConstants } from "@/common/AppConstants";
 import clientPromise from "@/lib/mongodb";
+import { Collection, Document, UpdateResult, InsertOneResult } from "mongodb";
 
-export async function POST(req) {
-  const { email, password, firstName, lastName } = await req.json();
+interface RegisterRequestBody {
+  email: string;
+  password: string;
+  firstName?: string;
+  lastName?: string;
+}
+
+interface UserDocument extends Document {
+  email: string;
+  password: string;
+  firstName?: string;
+  lastName?: string;
+  isGuest?: boolean;
+  updated_at?: Date;
+}
+
+export async function POST(req: Request): Promise<Response> {
+  const { email, password, firstName, lastName } =
+    (await req.json()) as RegisterRequestBody;
 
   if (!email || !password) {
     return new Response(JSON.stringify({ error: "invalid data" }), {
@@ -16,12 +36,12 @@ export async function POST(req) {
   const emailLower = email.toLowerCase();
 
   const client = await clientPromise;
-  const db = client.db(); // default DB from connection string
-  const collection = db.collection(AppConstants.COLLECTION.USERS);
+  const db = client.db();
+  const collection: Collection<UserDocument> = db.collection(
+    AppConstants.COLLECTION.USERS
+  );
 
-  const dbUser = await collection.findOne({
-    email: emailLower,
-  });
+  const dbUser = await collection.findOne({ email: emailLower });
 
   if (dbUser && !dbUser?.isGuest) {
     return new Response(
@@ -35,14 +55,14 @@ export async function POST(req) {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  let user = {
-    email: email.toLowerCase(),
+  const user: UserDocument = {
+    email: emailLower,
     password: hashedPassword,
     firstName,
     lastName,
   };
 
-  let result = null;
+  let result: UpdateResult | InsertOneResult | null = null;
 
   if (dbUser && dbUser?.isGuest) {
     user.isGuest = false;

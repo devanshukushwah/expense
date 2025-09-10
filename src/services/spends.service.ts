@@ -1,6 +1,5 @@
 import { HttpUrlConfig } from "@/core/HttpUrlConfig";
-
-const { default: api } = require("@/lib/axios");
+import api from "@/lib/axios";
 
 export const createSpend = async (data) => {
   try {
