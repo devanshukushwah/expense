@@ -4,6 +4,7 @@ export const AppConstants = {
   COLLECTION: {
     SPENDS: "spends",
     USERS: "users",
+    CATEGORIES: "categories",
   },
   SYSTEM_USER: {
     _id: "000000000000000000000001",

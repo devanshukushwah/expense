@@ -14,4 +14,8 @@ export class HttpUrlConfig {
   static postSpendUrl() {
     return `${this.getBaseUrl()}/spends`;
   }
+
+  static getCategoriesUrl() {
+    return `${this.getBaseUrl()}/categories`;
+  }
 }

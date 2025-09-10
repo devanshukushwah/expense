@@ -1,9 +1,9 @@
 import { HttpUrlConfig } from "@/core/HttpUrlConfig";
 import api from "@/lib/axios";
 
-export const createSpend = async (data) => {
+export const getCategories = async () => {
   try {
-    const response = await api.post(HttpUrlConfig.postSpendUrl(), data);
+    const response = await api.get(HttpUrlConfig.getCategoriesUrl());
     return response?.data;
   } catch (error) {
     throw error;

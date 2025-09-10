@@ -10,7 +10,7 @@ import { useLocalStorage } from "usehooks-ts";
 
 export default function Header() {
   const router = useRouter();
-  const [token, setToken, removeToken] = useLocalStorage("token", null);
+  const [token, , removeToken] = useLocalStorage("token", null);
 
   const handleLoginClick = () => {
     router.push("/login");
