@@ -2,6 +2,7 @@
 
 import { Spend as SpendInterface } from "@/collection/Spend.collection";
 import { ApiContextType } from "@/common/ApiContextType";
+import { spendDefaultValue } from "@/common/DefaultValue";
 import Header from "@/components/Header";
 import Spend from "@/components/Spend";
 import { useApiDispatch, useApiState } from "@/context/ApiStateContext";
@@ -11,14 +12,8 @@ import LazyInvoke from "@/utils/LazyInvoke";
 import { Container } from "@mui/material";
 import React, { useEffect } from "react";
 
-const defaultValue = (): SpendInterface => ({
-  desc: "",
-  amt: null,
-  catId: null,
-});
-
 export default function Home() {
-  const [spend, setSpend] = React.useState<SpendInterface>(defaultValue());
+  const [spend, setSpend] = React.useState<SpendInterface>(spendDefaultValue());
   const { categories, loading } = useApiState();
   const dispact = useApiDispatch();
 
@@ -28,7 +23,7 @@ export default function Home() {
 
     if (response?.success) {
       LazyInvoke({ callback: () => dispact({ type: "STOP_ADD_SPEND" }) });
-      setSpend(defaultValue());
+      setSpend(spendDefaultValue());
     }
   };
 
@@ -56,6 +51,7 @@ export default function Home() {
           loading={loading.addSpend}
           onSubmit={handleSpendSubmit}
           item={spend}
+          buttonLabel="Add Spend"
         />
       </Container>
     </>
