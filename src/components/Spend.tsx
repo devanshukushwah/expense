@@ -64,6 +64,7 @@ function Spend({
         value={spend?.catId}
         onChange={handleChange}
         size="small"
+        disabled={!categories?.length}
       >
         {categories?.map((category) => (
           <MenuItem key={category.catId} value={category.catId}>
