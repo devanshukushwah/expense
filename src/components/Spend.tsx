@@ -8,15 +8,16 @@ import {
 } from "@mui/material";
 import React, { useEffect } from "react";
 import { AppConstants } from "../common/AppConstants";
+import { spendDefaultValue } from "@/common/DefaultValue";
 
-const defaultValue = (): Spend => ({
-  desc: "",
-  amt: null,
-  catId: null,
-});
-
-function Spend({ categories, onSubmit, loading, item = null }) {
-  const [spend, setSpend] = React.useState<Spend>(null);
+function Spend({
+  categories,
+  onSubmit,
+  loading,
+  item = null,
+  buttonLabel = null,
+}) {
+  const [spend, setSpend] = React.useState<Spend>(spendDefaultValue());
 
   const handleChange = (e) => {
     setSpend({ ...spend, [e.target.name]: e.target.value });
@@ -36,7 +37,7 @@ function Spend({ categories, onSubmit, loading, item = null }) {
         ...item,
       });
     } else {
-      setSpend(defaultValue());
+      setSpend(spendDefaultValue());
     }
   }, [item]);
 
@@ -86,7 +87,7 @@ function Spend({ categories, onSubmit, loading, item = null }) {
         loading={loading}
         disabled={!spend?.catId || !spend?.amt}
       >
-        {item ? "Save Changes" : "Add Spend"}
+        {buttonLabel ?? "Save Changes"}
       </Button>
     </Stack>
   );
