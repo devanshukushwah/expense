@@ -1,0 +1,113 @@
+import React from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
+
+// Define column type
+interface Column {
+  id: string;
+  label: string;
+  pr?: string; // Optional prefix, e.g., currency symbol
+}
+
+// Define props type
+interface ReusableTableProps<T> {
+  columns: Column[];
+  data: T[];
+}
+
+/**
+ * ReusableTable Component
+ *
+ * @param {Array} columns - Array of column definitions [{ id: "name", label: "Name" }]
+ * @param {Array} data - Array of row objects [{ name: "John", age: 25 }]
+ */
+const CommonTable = <T extends Record<string, any>>({
+  columns = [],
+  data = [],
+}: ReusableTableProps<T>) => {
+  return (
+    <TableContainer component={Paper} sx={{ boxShadow: 3, borderRadius: 2 }}>
+      <Table sx={{ minWidth: 650 }}>
+        <TableHead>
+          <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+            {columns.map((col) => (
+              <TableCell
+                key={col.id}
+                sx={{
+                  fontWeight: "bold",
+                  color: "#333",
+                  fontSize: "1rem",
+                  borderBottom: "2px solid #e0e0e0",
+                }}
+              >
+                {col.label}
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {data.length === 0 ? (
+            <TableRow>
+              <TableCell
+                colSpan={columns.length}
+                align="center"
+                sx={{ color: "#888" }}
+              >
+                No data available
+              </TableCell>
+            </TableRow>
+          ) : (
+            data.map((row, rowIndex) => (
+              <TableRow
+                key={rowIndex}
+                sx={{
+                  "&:nth-of-type(odd)": { backgroundColor: "#fafafa" },
+                  "&:hover": { backgroundColor: "#f0f7ff" },
+                  transition: "background 0.2s",
+                }}
+              >
+                {columns.map((col) => (
+                  <TableCell key={col.id} sx={{ color: "#444" }}>
+                    {col.pr} {row[col.id]}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          )}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+};
+
+export default CommonTable;
+
+/**
+ * Example usage:
+ *
+ * interface User {
+ *   name: string;
+ *   age: number;
+ *   email: string;
+ * }
+ *
+ * const columns: Column[] = [
+ *   { id: "name", label: "Name" },
+ *   { id: "age", label: "Age" },
+ *   { id: "email", label: "Email" },
+ * ];
+ *
+ * const data: User[] = [
+ *   { name: "John Doe", age: 28, email: "john@example.com" },
+ *   { name: "Jane Smith", age: 34, email: "jane@example.com" },
+ * ];
+ *
+ * <ReusableTable<User> columns={columns} data={data} />
+ */

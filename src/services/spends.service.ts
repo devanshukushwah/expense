@@ -9,3 +9,12 @@ export const createSpend = async (data) => {
     throw error;
   }
 };
+
+export const getSpends = async (params) => {
+  try {
+    const response = await api.get(HttpUrlConfig.getSpendUrl(), { params });
+    return response?.data;
+  } catch (error) {
+    throw error;
+  }
+};

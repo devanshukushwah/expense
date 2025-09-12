@@ -6,6 +6,7 @@ import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { Spend } from "@/collection/Spend.collection";
 import type { NextRequest } from "next/server";
+import { Category } from "@/collection/Category.collection";
 
 export const GET = withAuth(
   async (
@@ -14,6 +15,9 @@ export const GET = withAuth(
     const client = await clientPromise;
     const db = client.db();
     const collection = db.collection<Spend>(AppConstants.COLLECTION.SPENDS);
+    const categoryCollection = db.collection(
+      AppConstants.COLLECTION.CATEGORIES
+    );
 
     const user = request.user;
 
@@ -30,7 +34,14 @@ export const GET = withAuth(
       .skip(skip)
       .toArray();
 
-    return new Response(JSON.stringify({ spends }), {
+    const categories = await categoryCollection.find({}).toArray();
+
+    spends.forEach((spend) => {
+      const category = categories.find((cat) => cat.catId === spend.catId);
+      spend.cat = category ? category.title : "Unknown";
+    });
+
+    return new Response(JSON.stringify({ success: true, data: { spends } }), {
       headers: { "Content-Type": "application/json" },
     });
   }
