@@ -10,10 +10,11 @@ import {
 } from "@mui/material";
 
 // Define column type
-interface Column {
+export interface Column {
   id: string;
   label: string;
   pr?: string; // Optional prefix, e.g., currency symbol
+  width?: number | string; // Optional width for the column
 }
 
 // Define props type
@@ -46,6 +47,8 @@ const CommonTable = <T extends Record<string, any>>({
                   fontSize: "1rem",
                   borderBottom: "2px solid #e0e0e0",
                 }}
+                align="left"
+                width={col.width}
               >
                 {col.label}
               </TableCell>

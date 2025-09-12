@@ -25,7 +25,7 @@ type ApiAction =
 
 const initialState: ApiState = {
   loading: {
-    fetchSpend: false,
+    fetchSpend: true,
     addSpend: false,
   },
   categories: [],
@@ -33,9 +33,21 @@ const initialState: ApiState = {
 
 function apiReducer(state: ApiState, action: ApiAction): ApiState {
   switch (action.type) {
-    case ApiContextType.FETCH_SPEND:
+    case ApiContextType.START_FETCH_SPEND:
       return {
         ...state,
+        loading: {
+          ...state.loading,
+          fetchSpend: true,
+        },
+      };
+    case ApiContextType.STOP_FETCH_SPEND:
+      return {
+        ...state,
+        loading: {
+          ...state.loading,
+          fetchSpend: false,
+        },
       };
 
     case ApiContextType.START_ADD_SPEND:

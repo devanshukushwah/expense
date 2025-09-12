@@ -1,19 +1,25 @@
 "use client";
 
+import { ApiContextType } from "@/common/ApiContextType";
 import { AppConstants } from "@/common/AppConstants";
-import CommonTable from "@/components/CommonTable";
+import CommonTable, { Column } from "@/components/CommonTable";
 import Header from "@/components/Header";
+import Loader from "@/components/Loader";
+import { useApiDispatch, useApiState } from "@/context/ApiStateContext";
 import { getSpends } from "@/services/spends.service";
+import LazyInvoke from "@/utils/LazyInvoke";
 import { Container } from "@mui/material";
 import React from "react";
 
-const columns = [
-  { id: "amt", label: "Amount", pr: "₹" },
+const columns: Column[] = [
+  { id: "amt", label: "Amount", pr: "₹", width: "auto" },
   { id: "cat", label: "Category" },
   { id: "desc", label: "Description" },
 ];
 
 function page() {
+  const { loading } = useApiState();
+  const dispact = useApiDispatch();
   const [spends, setSpends] = React.useState([]);
 
   const fetchSpends = async () => {
@@ -24,6 +30,9 @@ function page() {
         data: { spends },
       } = response;
       setSpends(spends || []);
+      LazyInvoke({
+        callback: () => dispact({ type: ApiContextType.STOP_FETCH_SPEND }),
+      });
     }
   };
   React.useEffect(() => {
@@ -34,7 +43,11 @@ function page() {
     <>
       <Header />
       <Container sx={{ mt: AppConstants.GAP * 2, mb: AppConstants.GAP * 2 }}>
-        <CommonTable columns={columns} data={spends} />
+        {loading.fetchSpend ? (
+          <Loader times={1} height={200} />
+        ) : (
+          <CommonTable columns={columns} data={spends} />
+        )}
       </Container>
     </>
   );
