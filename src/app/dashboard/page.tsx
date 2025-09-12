@@ -7,7 +7,6 @@ import Header from "@/components/Header";
 import Loader from "@/components/Loader";
 import { useApiDispatch, useApiState } from "@/context/ApiStateContext";
 import { getSpends } from "@/services/spends.service";
-import LazyInvoke from "@/utils/LazyInvoke";
 import { Container } from "@mui/material";
 import React from "react";
 import { formatMoney } from "@/utils/AppUtil";
@@ -41,9 +40,7 @@ function page() {
       console.log("formattedSpends", formattedSpends);
 
       setSpends(formattedSpends || []);
-      LazyInvoke({
-        callback: () => dispact({ type: ApiContextType.STOP_FETCH_SPEND }),
-      });
+      dispact({ type: ApiContextType.STOP_FETCH_SPEND });
     }
   };
   React.useEffect(() => {
