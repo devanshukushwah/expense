@@ -5,6 +5,7 @@ export interface Spend {
   desc: string | undefined;
   amt: number | null;
   catId: number | null;
+  cat?: string;
   createdBy?: ObjectId;
   createdAt?: Date;
 }
