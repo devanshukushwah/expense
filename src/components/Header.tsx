@@ -7,6 +7,7 @@ import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import { useLocalStorage } from "usehooks-ts";
+import { Home } from "@mui/icons-material";
 
 export default function Header() {
   const router = useRouter();
@@ -33,11 +34,19 @@ export default function Header() {
             <>
               <Button
                 color="inherit"
+                startIcon={<Home />}
+                onClick={() => router.push("/")}
+              >
+                Home
+              </Button>
+              <Button
+                color="inherit"
                 startIcon={<DashboardIcon />}
                 onClick={() => router.push("/dashboard")}
               >
                 Dashboard
               </Button>
+
               <Button
                 color="inherit"
                 onClick={handleLogoutClick}
