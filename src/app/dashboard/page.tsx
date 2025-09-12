@@ -10,9 +10,10 @@ import { getSpends } from "@/services/spends.service";
 import LazyInvoke from "@/utils/LazyInvoke";
 import { Container } from "@mui/material";
 import React from "react";
+import { formatMoney } from "@/utils/AppUtil";
 
 const columns: Column[] = [
-  { id: "amt", label: "Amount", pr: "₹", width: "auto" },
+  { id: "amt", label: "Amount" },
   { id: "cat", label: "Category" },
   { id: "desc", label: "Description" },
 ];
@@ -31,7 +32,15 @@ function page() {
       const {
         data: { spends },
       } = response;
-      setSpends(spends || []);
+
+      const formattedSpends = spends.map((spend) => ({
+        ...spend,
+        amt: formatMoney(spend.amt),
+      }));
+
+      console.log("formattedSpends", formattedSpends);
+
+      setSpends(formattedSpends || []);
       LazyInvoke({
         callback: () => dispact({ type: ApiContextType.STOP_FETCH_SPEND }),
       });
