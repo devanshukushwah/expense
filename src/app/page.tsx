@@ -2,6 +2,7 @@
 
 import { Spend as SpendInterface } from "@/collection/Spend.collection";
 import { ApiContextType } from "@/common/ApiContextType";
+import { AppConstants } from "@/common/AppConstants";
 import { spendDefaultValue } from "@/common/DefaultValue";
 import Header from "@/components/Header";
 import Spend from "@/components/Spend";
@@ -45,7 +46,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <Container>
+      <Container sx={{ mt: AppConstants.GAP * 2 }}>
         <Spend
           categories={categories}
           loading={loading.addSpend}
