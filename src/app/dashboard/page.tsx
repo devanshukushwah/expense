@@ -23,6 +23,8 @@ function page() {
   const [spends, setSpends] = React.useState([]);
 
   const fetchSpends = async () => {
+    dispact({ type: ApiContextType.START_FETCH_SPEND });
+
     const response = await getSpends({ limit: 10, skip: 0 });
 
     if (response?.success) {
