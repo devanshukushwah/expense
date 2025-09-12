@@ -2,6 +2,7 @@
 
 import { Spend as SpendInterface } from "@/collection/Spend.collection";
 import { ApiContextType } from "@/common/ApiContextType";
+import { AppConstants } from "@/common/AppConstants";
 import { spendDefaultValue } from "@/common/DefaultValue";
 import Header from "@/components/Header";
 import Spend from "@/components/Spend";
@@ -18,11 +19,13 @@ export default function Home() {
   const dispact = useApiDispatch();
 
   const handleSpendSubmit = async (data) => {
-    dispact({ type: "START_ADD_SPEND" });
+    dispact({ type: ApiContextType.START_ADD_SPEND });
     const response = await createSpend(data);
 
     if (response?.success) {
-      LazyInvoke({ callback: () => dispact({ type: "STOP_ADD_SPEND" }) });
+      LazyInvoke({
+        callback: () => dispact({ type: ApiContextType.STOP_ADD_SPEND }),
+      });
       setSpend(spendDefaultValue());
     }
   };
@@ -45,7 +48,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <Container>
+      <Container sx={{ mt: AppConstants.GAP * 2 }}>
         <Spend
           categories={categories}
           loading={loading.addSpend}
