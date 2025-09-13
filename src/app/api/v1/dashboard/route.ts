@@ -5,21 +5,13 @@ import { withAuth } from "@/lib/withAuth";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { Category } from "@/collection/Category.collection";
+import { AppCache, CacheScreen } from "@/app/cache/AppCache";
 
 export const GET = withAuth(async (request) => {
-  const client = await clientPromise;
-  const db = client.db();
-  const spendCollection = db.collection(AppConstants.COLLECTION.SPENDS);
-  const categoryCollection = db.collection<Category>(
-    AppConstants.COLLECTION.CATEGORIES
-  );
-
   // Get current date
   const now = new Date();
-
   // Start of current month
   const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-
   // End of current month
   const endDate = new Date(
     now.getFullYear(),
@@ -29,6 +21,28 @@ export const GET = withAuth(async (request) => {
     59,
     59,
     999
+  );
+
+  if (AppCache.has(CacheScreen.DASHBOARD, request.user._id)) {
+    const dashboard = AppCache.get(CacheScreen.DASHBOARD, request.user._id);
+    return new Response(
+      JSON.stringify({
+        success: true,
+        data: {
+          dashboard,
+        },
+      }),
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  }
+
+  const client = await clientPromise;
+  const db = client.db();
+  const spendCollection = db.collection(AppConstants.COLLECTION.SPENDS);
+  const categoryCollection = db.collection<Category>(
+    AppConstants.COLLECTION.CATEGORIES
   );
 
   const dashboardArray = await spendCollection
@@ -77,6 +91,8 @@ export const GET = withAuth(async (request) => {
       };
     });
   }
+
+  AppCache.set(CacheScreen.DASHBOARD, request.user._id, dashboard);
 
   return new Response(
     JSON.stringify({
