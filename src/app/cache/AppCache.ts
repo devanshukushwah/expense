@@ -2,6 +2,7 @@ import { AppUtil } from "@/utils/AppUtil";
 
 export enum CacheScreen {
   DASHBOARD = "DASHBOARD",
+  CATEGORIES = "CATEGORIES",
 }
 
 export class AppCache {

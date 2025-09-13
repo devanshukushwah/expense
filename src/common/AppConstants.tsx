@@ -14,4 +14,5 @@ export const AppConstants = {
     lastName: "",
   },
   UNKNOWN: "Unknown",
+  NO_VALUE: "N/A",
 };
