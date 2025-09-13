@@ -11,7 +11,6 @@ import { Container, Divider } from "@mui/material";
 import React from "react";
 import DashboardSpend from "@/components/DashboardSpend";
 import { getDashboard } from "@/services/dashboard.service";
-import LazyInvoke from "@/utils/LazyInvoke";
 import { AppUtil } from "@/utils/AppUtil";
 
 const columns: Column[] = [
@@ -51,12 +50,8 @@ function page() {
     const response = await getDashboard();
     if (response?.success) {
       const dashbaord = response?.data?.dashboard || {};
-
       setDashboard(dashbaord);
-
-      LazyInvoke({
-        callback: () => dispact({ type: ApiContextType.STOP_FETCH_DASHBOARD }),
-      });
+      dispact({ type: ApiContextType.STOP_FETCH_DASHBOARD });
     }
   };
 
