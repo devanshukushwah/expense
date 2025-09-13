@@ -50,7 +50,12 @@ function Spend({
         fullWidth
         variant="outlined"
         value={spend?.amt}
-        onChange={handleChange}
+        onChange={(e) => {
+          const value = e.target.value;
+          if (value === "" || /^\d+(\.\d{1,2})?$/.test(value)) {
+            handleChange(e);
+          }
+        }}
         InputProps={{ inputProps: { min: 0 } }}
         size="small"
         autoFocus

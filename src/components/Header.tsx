@@ -37,14 +37,28 @@ export default function Header() {
                 startIcon={<Home />}
                 onClick={() => router.push("/")}
               >
-                Home
+                <Box
+                  component="span"
+                  sx={{
+                    display: { xs: "none", sm: "inline" },
+                  }}
+                >
+                  Home
+                </Box>
               </Button>
               <Button
                 color="inherit"
                 startIcon={<DashboardIcon />}
                 onClick={() => router.push("/dashboard")}
               >
-                Dashboard
+                <Box
+                  component="span"
+                  sx={{
+                    display: { xs: "none", sm: "inline" },
+                  }}
+                >
+                  Dashboard
+                </Box>
               </Button>
 
               <Button
@@ -52,7 +66,14 @@ export default function Header() {
                 onClick={handleLogoutClick}
                 startIcon={<LogoutIcon />}
               >
-                Logout
+                <Box
+                  component="span"
+                  sx={{
+                    display: { xs: "none", sm: "inline" },
+                  }}
+                >
+                  Logout
+                </Box>
               </Button>
             </>
           ) : (
@@ -61,7 +82,14 @@ export default function Header() {
               startIcon={<LoginIcon />}
               onClick={handleLoginClick}
             >
-              Login
+              <Box
+                component="span"
+                sx={{
+                  display: { xs: "none", sm: "inline" },
+                }}
+              >
+                Login
+              </Box>
             </Button>
           )}
         </Box>
