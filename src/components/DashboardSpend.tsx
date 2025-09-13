@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardContent, Typography, Grid, Divider } from "@mui/material";
-import { formatMoney } from "@/utils/AppUtil";
+import { AppUtil } from "@/utils/AppUtil";
 
 const DashboardSpend = ({ data }) => {
   const categories = data.categories || [];
@@ -13,7 +13,7 @@ const DashboardSpend = ({ data }) => {
         </Typography> */}
 
         <Typography variant="h4" fontWeight="bold" gutterBottom>
-          {formatMoney(data.totalSpends)}
+          {AppUtil.formatMoney(data.totalSpends)}
         </Typography>
 
         <Divider sx={{ my: 2 }} />
@@ -27,7 +27,7 @@ const DashboardSpend = ({ data }) => {
               >
                 <Typography variant="body1">{cat.title}</Typography>
                 <Typography variant="subtitle1" fontWeight="bold">
-                  {formatMoney(cat.amt)}
+                  {AppUtil.formatMoney(cat.amt)}
                 </Typography>
               </Card>
             </Grid>

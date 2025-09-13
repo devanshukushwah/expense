@@ -9,11 +9,10 @@ import { useApiDispatch, useApiState } from "@/context/ApiStateContext";
 import { getSpends } from "@/services/spends.service";
 import { Container, Divider } from "@mui/material";
 import React from "react";
-import { formatMoney } from "@/utils/AppUtil";
-import { Dashboard } from "@mui/icons-material";
 import DashboardSpend from "@/components/DashboardSpend";
 import { getDashboard } from "@/services/dashboard.service";
 import LazyInvoke from "@/utils/LazyInvoke";
+import { AppUtil } from "@/utils/AppUtil";
 
 const columns: Column[] = [
   { id: "amt", label: "Amount" },
@@ -39,7 +38,7 @@ function page() {
 
       const formattedSpends = spends.map((spend) => ({
         ...spend,
-        amt: formatMoney(spend.amt),
+        amt: AppUtil.formatMoney(spend.amt),
       }));
 
       setSpends(formattedSpends || []);

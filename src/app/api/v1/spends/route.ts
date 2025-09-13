@@ -6,7 +6,8 @@ import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { Spend } from "@/collection/Spend.collection";
 import type { NextRequest } from "next/server";
-import { Category } from "@/collection/Category.collection";
+import { AppCache, CacheScreen } from "@/app/cache/AppCache";
+import App from "next/app";
 
 export const GET = withAuth(
   async (
@@ -80,6 +81,8 @@ export const POST = withAuth(
     const result = await collection.insertOne(newSpend);
 
     newSpend._id = result.insertedId;
+
+    AppCache.invalidate(CacheScreen.DASHBOARD, request.user._id);
 
     return new Response(
       JSON.stringify({

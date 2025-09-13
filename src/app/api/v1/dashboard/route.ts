@@ -5,6 +5,8 @@ import { withAuth } from "@/lib/withAuth";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { Category } from "@/collection/Category.collection";
+import { AppCache, CacheScreen } from "@/app/cache/AppCache";
+import { AppUtil } from "@/utils/AppUtil";
 
 export const GET = withAuth(async (request) => {
   const client = await clientPromise;
@@ -30,6 +32,21 @@ export const GET = withAuth(async (request) => {
     59,
     999
   );
+
+  if (AppCache.has(CacheScreen.DASHBOARD, request.user._id)) {
+    const dashboard = AppCache.get(CacheScreen.DASHBOARD, request.user._id);
+    return new Response(
+      JSON.stringify({
+        success: true,
+        data: {
+          dashboard,
+        },
+      }),
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  }
 
   const dashboardArray = await spendCollection
     .aggregate([
@@ -77,6 +94,8 @@ export const GET = withAuth(async (request) => {
       };
     });
   }
+
+  AppCache.set(CacheScreen.DASHBOARD, request.user._id, dashboard);
 
   return new Response(
     JSON.stringify({
