@@ -8,6 +8,7 @@ type ApiState = {
   loading: {
     fetchSpend: boolean;
     addSpend: boolean;
+    fetchDashboard: boolean;
   };
   categories: Category[];
 };
@@ -27,6 +28,7 @@ const initialState: ApiState = {
   loading: {
     fetchSpend: true,
     addSpend: false,
+    fetchDashboard: true,
   },
   categories: [],
 };
@@ -64,6 +66,22 @@ function apiReducer(state: ApiState, action: ApiAction): ApiState {
         loading: {
           ...state.loading,
           addSpend: false,
+        },
+      };
+    case ApiContextType.START_FETCH_DASHBOARD:
+      return {
+        ...state,
+        loading: {
+          ...state.loading,
+          fetchDashboard: true,
+        },
+      };
+    case ApiContextType.STOP_FETCH_DASHBOARD:
+      return {
+        ...state,
+        loading: {
+          ...state.loading,
+          fetchDashboard: false,
         },
       };
     case ApiContextType.SET_CATEGORIES:

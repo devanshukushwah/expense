@@ -22,4 +22,8 @@ export class HttpUrlConfig {
   static getCategoriesUrl() {
     return `${this.getBaseUrl()}/categories`;
   }
+
+  static getDashboardUrl() {
+    return `${this.getBaseUrl()}/dashboard`;
+  }
 }
