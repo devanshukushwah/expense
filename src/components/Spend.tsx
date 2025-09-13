@@ -51,12 +51,13 @@ function Spend({
         variant="outlined"
         value={spend?.amt}
         onChange={(e) => {
-          const value = e.target.value;
-          if (value === "" || /^\d+(\.\d{1,2})?$/.test(value)) {
+          let value = e.target.value;
+          // Only allow numbers and optional decimal point, max 2 decimals
+          if (/^\d*\.?\d{0,2}$/.test(value)) {
             handleChange(e);
           }
         }}
-        InputProps={{ inputProps: { min: 0 } }}
+        InputProps={{ inputProps: { min: 0, step: "any" } }}
         size="small"
         autoFocus
       />
