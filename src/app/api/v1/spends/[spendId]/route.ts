@@ -66,3 +66,21 @@ export const PUT = withAuth(async (request, { params }): Promise<Response> => {
     }
   );
 });
+
+export const GET = withAuth(async (request, { params }) => {
+  const client = await clientPromise;
+  const db = client.db();
+  const collection = db.collection<Spend>(AppConstants.COLLECTION.SPENDS);
+
+  const user = request.user;
+  const { spendId } = await params;
+
+  const spend = await collection.findOne({
+    _id: new ObjectId(spendId),
+    createdBy: new ObjectId(user._id),
+  });
+
+  return new Response(JSON.stringify({ success: true, data: { spend } }), {
+    headers: { "Content-Type": "application/json" },
+  });
+});
