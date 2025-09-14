@@ -12,7 +12,25 @@ export const createSpend = async (data) => {
 
 export const getSpends = async (params) => {
   try {
-    const response = await api.get(HttpUrlConfig.getSpendUrl(), { params });
+    const response = await api.get(HttpUrlConfig.getSpendsUrl(), { params });
+    return response?.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getSpend = async (spendId: string) => {
+  try {
+    const response = await api.get(HttpUrlConfig.getSpendUrl(spendId));
+    return response?.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateSpend = async (spendId: string, data) => {
+  try {
+    const response = await api.put(HttpUrlConfig.putSpendUrl(spendId), data);
     return response?.data;
   } catch (error) {
     throw error;

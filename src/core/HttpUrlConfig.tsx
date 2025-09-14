@@ -15,8 +15,16 @@ export class HttpUrlConfig {
     return `${this.getBaseUrl()}/spends`;
   }
 
-  static getSpendUrl() {
+  static getSpendsUrl() {
     return `${this.getBaseUrl()}/spends`;
+  }
+
+  static getSpendUrl(spendId: string) {
+    return `${this.getBaseUrl()}/spends/${spendId}`;
+  }
+
+  static putSpendUrl(spendId: string) {
+    return `${this.getBaseUrl()}/spends/${spendId}`;
   }
 
   static getCategoriesUrl() {
