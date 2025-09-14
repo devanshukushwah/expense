@@ -80,6 +80,13 @@ export const GET = withAuth(async (request, { params }) => {
     createdBy: new ObjectId(user._id),
   });
 
+  if (!spend) {
+    return new Response(JSON.stringify({ error: "Spend not found" }), {
+      status: 404,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
   return new Response(JSON.stringify({ success: true, data: { spend } }), {
     headers: { "Content-Type": "application/json" },
   });
