@@ -7,8 +7,10 @@ import { ApiContextType } from "../common/ApiContextType";
 type ApiState = {
   loading: {
     fetchSpend: boolean;
+    fetchOneSpend: boolean;
     addSpend: boolean;
     fetchDashboard: boolean;
+    updateSpend: boolean;
   };
   categories: Category[];
 };
@@ -27,8 +29,10 @@ type ApiAction =
 const initialState: ApiState = {
   loading: {
     fetchSpend: true,
+    fetchOneSpend: true,
     addSpend: false,
     fetchDashboard: true,
+    updateSpend: false,
   },
   categories: [],
 };
@@ -82,6 +86,40 @@ function apiReducer(state: ApiState, action: ApiAction): ApiState {
         loading: {
           ...state.loading,
           fetchDashboard: false,
+        },
+      };
+
+    case ApiContextType.START_UPDATE_SPEND:
+      return {
+        ...state,
+        loading: {
+          ...state.loading,
+          updateSpend: true,
+        },
+      };
+    case ApiContextType.STOP_UPDATE_SPEND:
+      return {
+        ...state,
+        loading: {
+          ...state.loading,
+          updateSpend: false,
+        },
+      };
+
+    case ApiContextType.START_FETCH_ONE_SPEND:
+      return {
+        ...state,
+        loading: {
+          ...state.loading,
+          fetchOneSpend: true,
+        },
+      };
+    case ApiContextType.STOP_FETCH_ONE_SPEND:
+      return {
+        ...state,
+        loading: {
+          ...state.loading,
+          fetchOneSpend: false,
         },
       };
     case ApiContextType.SET_CATEGORIES:

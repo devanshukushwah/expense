@@ -7,7 +7,10 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Button,
+  IconButton,
 } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 
 // Define column type
 export interface Column {
@@ -76,11 +79,23 @@ const CommonTable = <T extends Record<string, any>>({
                   transition: "background 0.2s",
                 }}
               >
-                {columns.map((col) => (
-                  <TableCell key={col.id} sx={{ color: "#444" }}>
-                    {col.pr} {row[col.id]}
-                  </TableCell>
-                ))}
+                {columns.map((col) =>
+                  col.label === "Action" ? (
+                    <TableCell key={col.id}>
+                      <IconButton
+                        aria-label="edit"
+                        color="primary"
+                        href={`/edit/${row["_id"]}`}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </TableCell>
+                  ) : (
+                    <TableCell key={col.id} sx={{ color: "#444" }}>
+                      {col.pr} {row[col.id]}
+                    </TableCell>
+                  )
+                )}
               </TableRow>
             ))
           )}

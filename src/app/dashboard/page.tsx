@@ -17,6 +17,7 @@ const columns: Column[] = [
   { id: "amt", label: "Amount" },
   { id: "cat", label: "Category" },
   { id: "desc", label: "Description" },
+  { id: "null", label: "Action" },
 ];
 
 function page() {
