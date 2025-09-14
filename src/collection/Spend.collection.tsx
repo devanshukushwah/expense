@@ -8,4 +8,5 @@ export interface Spend {
   cat?: string;
   createdBy?: ObjectId;
   createdAt?: Date;
+  updatedAt?: Date;
 }

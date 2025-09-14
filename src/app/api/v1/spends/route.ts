@@ -7,7 +7,6 @@ import { ObjectId } from "mongodb";
 import { Spend } from "@/collection/Spend.collection";
 import type { NextRequest } from "next/server";
 import { AppCache, CacheScreen } from "@/app/cache/AppCache";
-import App from "next/app";
 
 export const GET = withAuth(
   async (
