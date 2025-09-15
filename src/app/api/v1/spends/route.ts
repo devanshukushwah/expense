@@ -34,7 +34,7 @@ export const GET = withAuth(
 
     const spends = await collection
       .find(filter)
-      .sort({ [sortBy]: sortOrder == AppConstants.ASC ? 1 : -1 })
+      .sort({ [sortBy]: sortOrder != AppConstants.ASC ? -1 : 1 })
       .limit(limit)
       .skip(skip)
       .toArray();
