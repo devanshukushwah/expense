@@ -24,15 +24,19 @@ export const GET = withAuth(
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const skip = parseInt(searchParams.get("skip") || "0", 10);
+    const sortBy = searchParams.get("sortBy") || "createdAt";
+    const sortOrder = searchParams.get("sortOrder") || AppConstants.ASC;
+
+    const filter = { createdBy: new ObjectId(user._id) };
 
     const spends = await collection
-      .find({
-        createdBy: new ObjectId(user._id),
-      })
-      .sort({ createdAt: -1 })
+      .find(filter)
+      .sort({ [sortBy]: sortOrder == AppConstants.ASC ? 1 : -1 })
       .limit(limit)
       .skip(skip)
       .toArray();
+
+    const count = await collection.countDocuments(filter);
 
     const categories = await categoryCollection.find({}).toArray();
 
@@ -41,9 +45,12 @@ export const GET = withAuth(
       spend.cat = category ? category.title : "Unknown";
     });
 
-    return new Response(JSON.stringify({ success: true, data: { spends } }), {
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ success: true, data: { spends, count } }),
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   }
 );
 
