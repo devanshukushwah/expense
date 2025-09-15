@@ -24,8 +24,8 @@ export const GET = withAuth(
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const skip = parseInt(searchParams.get("skip") || "0", 10);
-    const sortBy = searchParams.get("sortBy") || "createdAt";
-    const sortOrder = searchParams.get("sortOrder") || AppConstants.ASC;
+    const sortBy = searchParams.get("sortBy") || AppConstants.CREATED_AT;
+    const sortOrder = searchParams.get("sortOrder") || AppConstants.DESC;
 
     const filter = {
       createdBy: new ObjectId(user._id),
@@ -34,7 +34,7 @@ export const GET = withAuth(
 
     const spends = await collection
       .find(filter)
-      .sort({ [sortBy]: sortOrder != AppConstants.ASC ? -1 : 1 })
+      .sort({ [sortBy]: sortOrder == AppConstants.ASC ? 1 : -1 })
       .limit(limit)
       .skip(skip)
       .toArray();
