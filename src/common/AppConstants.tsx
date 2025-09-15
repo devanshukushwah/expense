@@ -16,4 +16,6 @@ export const AppConstants = {
   UNKNOWN: "Unknown",
   NO_VALUE: "N/A",
   ASC: "ASC",
+  DESC: "DESC",
+  CREATED_AT: "createdAt",
 };
