@@ -91,3 +91,34 @@ export const GET = withAuth(async (request, { params }) => {
     headers: { "Content-Type": "application/json" },
   });
 });
+
+export const DELETE = withAuth(async (request, { params }) => {
+  const client = await clientPromise;
+  const db = client.db();
+  const collection = db.collection<Spend>(AppConstants.COLLECTION.SPENDS);
+
+  const user = request.user;
+  const { spendId } = await params;
+
+  const response = await collection.updateOne(
+    {
+      _id: new ObjectId(spendId),
+      createdBy: new ObjectId(user._id),
+    },
+    { $set: { isDeleted: true } }
+  );
+
+  if (!response) {
+    return new Response(JSON.stringify({ error: "Failed to delete" }), {
+      status: 404,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  return new Response(
+    JSON.stringify({ success: true, message: "Spend deleted successfully" }),
+    {
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+});

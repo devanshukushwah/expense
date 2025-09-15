@@ -27,7 +27,10 @@ export const GET = withAuth(
     const sortBy = searchParams.get("sortBy") || "createdAt";
     const sortOrder = searchParams.get("sortOrder") || AppConstants.ASC;
 
-    const filter = { createdBy: new ObjectId(user._id) };
+    const filter = {
+      createdBy: new ObjectId(user._id),
+      isDeleted: { $ne: true },
+    };
 
     const spends = await collection
       .find(filter)
