@@ -25,16 +25,26 @@ function page() {
   const dispact = useApiDispatch();
   const [spends, setSpends] = React.useState([]);
   const [dashboard, setDashboard] = React.useState({});
+  const [paginationData, setPaginationData] = React.useState({
+    count: 0,
+    page: 0,
+    rowsPerPage: 25,
+  });
 
-  const fetchSpends = async () => {
+  const fetchSpends = async ({ limit = 10, skip = 0 }) => {
     dispact({ type: ApiContextType.START_FETCH_SPEND });
 
-    const response = await getSpends({ limit: 10, skip: 0 });
+    const response = await getSpends({ limit, skip });
 
     if (response?.success) {
       const {
-        data: { spends },
+        data: { spends, count },
       } = response;
+
+      setPaginationData({
+        ...paginationData,
+        count: count || 0,
+      });
 
       const formattedSpends = spends.map((spend) => ({
         ...spend,
@@ -57,9 +67,38 @@ function page() {
   };
 
   React.useEffect(() => {
-    fetchSpends();
+    fetchSpends({});
     fetchDashboard();
   }, []);
+
+  const handlePaginationChange = () => {
+    const { page, rowsPerPage } = paginationData;
+    const skip = page * rowsPerPage;
+    const limit = rowsPerPage;
+    fetchSpends({ limit, skip });
+  };
+
+  React.useEffect(handlePaginationChange, [
+    paginationData.page,
+    paginationData.rowsPerPage,
+  ]);
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPaginationData({
+      ...paginationData,
+      page: newPage,
+    });
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setPaginationData({
+      ...paginationData,
+      rowsPerPage: parseInt(event.target.value, 10),
+      page: 0,
+    });
+  };
 
   return (
     <>
@@ -82,7 +121,15 @@ function page() {
         {loading.fetchSpend ? (
           <Loader times={1} height={200} />
         ) : (
-          <CommonTable columns={columns} data={spends} />
+          <CommonTable
+            columns={columns}
+            data={spends}
+            count={paginationData.count}
+            page={paginationData.page}
+            rowsPerPage={paginationData.rowsPerPage}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
         )}
       </Container>
     </>

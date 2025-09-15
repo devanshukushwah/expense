@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -7,8 +9,8 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Button,
   IconButton,
+  TablePagination,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 
@@ -24,6 +26,11 @@ export interface Column {
 interface ReusableTableProps<T> {
   columns: Column[];
   data: T[];
+  count: number;
+  page: number;
+  rowsPerPage: number;
+  onPageChange: (event: unknown, newPage: number) => void;
+  onRowsPerPageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 /**
@@ -35,6 +42,11 @@ interface ReusableTableProps<T> {
 const CommonTable = <T extends Record<string, any>>({
   columns = [],
   data = [],
+  count,
+  page,
+  rowsPerPage,
+  onPageChange,
+  onRowsPerPageChange,
 }: ReusableTableProps<T>) => {
   return (
     <TableContainer component={Paper} sx={{ boxShadow: 3, borderRadius: 2 }}>
@@ -101,6 +113,15 @@ const CommonTable = <T extends Record<string, any>>({
           )}
         </TableBody>
       </Table>
+      <TablePagination
+        rowsPerPageOptions={[10, 25, 50, 100]}
+        component="div"
+        count={count}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={onPageChange}
+        onRowsPerPageChange={onRowsPerPageChange}
+      />
     </TableContainer>
   );
 };
