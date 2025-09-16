@@ -45,6 +45,7 @@ export const GET = withAuth(async (request) => {
       {
         $match: {
           amt: { $gt: 0 },
+          isDeleted: { $ne: true },
           createdBy: new ObjectId(request.user._id),
           createdAt: {
             $gte: startDate,
