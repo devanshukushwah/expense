@@ -6,22 +6,17 @@ import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { Category } from "@/collection/Category.collection";
 import { AppCache, CacheScreen } from "@/app/cache/AppCache";
+import moment from "moment-timezone";
+import DateUtil from "@/utils/DateUtil";
 
 export const GET = withAuth(async (request) => {
-  // Get current date
-  const now = new Date();
-  // Start of current month
-  const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-  // End of current month
-  const endDate = new Date(
-    now.getFullYear(),
-    now.getMonth() + 1,
-    0,
-    23,
-    59,
-    59,
-    999
-  );
+  // Get current month start & end in IST
+  const startOfMonthIST = moment.tz("Asia/Kolkata").startOf("month");
+  const endOfMonthIST = moment.tz("Asia/Kolkata").endOf("month");
+
+  // Convert them to UTC for DB queries
+  const startDate = startOfMonthIST.clone().utc().toDate();
+  const endDate = endOfMonthIST.clone().utc().toDate();
 
   if (AppCache.has(CacheScreen.DASHBOARD, request.user._id)) {
     const dashboard = AppCache.get(CacheScreen.DASHBOARD, request.user._id);
