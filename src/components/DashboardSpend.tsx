@@ -1,23 +1,35 @@
-import React from "react";
-import { Card, CardContent, Typography, Grid, Divider } from "@mui/material";
+import { AppConstants } from "@/common/AppConstants";
 import { AppUtil } from "@/utils/AppUtil";
+import { Card, CardContent, Divider, Grid, Typography } from "@mui/material";
 
 const DashboardSpend = ({ data }) => {
   const categories = data.categories || [];
-
   return (
     <Card sx={{ borderRadius: 2, boxShadow: 3, p: 2 }}>
       <CardContent>
-        {/* <Typography variant="h6" gutterBottom>
-          Dashboard
-        </Typography> */}
+        {/* Top section: Today + Total */}
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <Typography variant="subtitle2" color="text.secondary">
+              Today’s Spends
+            </Typography>
+            <Typography variant="h6" color="primary">
+              {AppUtil.formatMoney(data?.todaySpends)}
+            </Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <Typography variant="subtitle2" color="text.secondary">
+              Month's Spends
+            </Typography>
+            <Typography variant="h6" color="error">
+              {AppUtil.formatMoney(data?.totalSpends)}
+            </Typography>
+          </Grid>
+        </Grid>
 
-        <Typography variant="h4" fontWeight="bold" gutterBottom>
-          {AppUtil.formatMoney(data.totalSpends)}
-        </Typography>
+        <Divider sx={{ mb: AppConstants.GAP, mt: AppConstants.GAP }} />
 
-        <Divider sx={{ my: 2 }} />
-
+        {/* Categories List */}
         <Grid container spacing={2}>
           {categories.map((cat, index) => (
             <Grid item xs={6} sm={4} md={3} key={index}>
@@ -25,8 +37,10 @@ const DashboardSpend = ({ data }) => {
                 variant="outlined"
                 sx={{ p: 2, borderRadius: 2, textAlign: "center" }}
               >
-                <Typography variant="body1">{cat.title}</Typography>
-                <Typography variant="subtitle1" fontWeight="bold">
+                <Typography variant="subtitle2" color="text.secondary">
+                  {cat.title}
+                </Typography>
+                <Typography variant="subtitle1">
                   {AppUtil.formatMoney(cat.amt)}
                 </Typography>
               </Card>

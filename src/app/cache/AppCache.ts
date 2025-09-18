@@ -9,6 +9,10 @@ export class AppCache {
   private static cache = new Map<string, any>();
 
   static has(screen: CacheScreen, userId: string): boolean {
+    if (process.env.NODE_ENV === "development") {
+      return false;
+    }
+
     const key = AppUtil.generateKey(screen, userId);
     return AppCache.cache.has(key);
   }

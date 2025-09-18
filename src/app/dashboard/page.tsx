@@ -6,12 +6,13 @@ import CommonTable, { Column } from "@/components/CommonTable";
 import Header from "@/components/Header";
 import Loader from "@/components/Loader";
 import { useApiDispatch, useApiState } from "@/context/ApiStateContext";
-import { getSpends } from "@/services/spends.service";
+import { deleteSpend, getSpends } from "@/services/spends.service";
 import { Container, Divider } from "@mui/material";
 import React from "react";
 import DashboardSpend from "@/components/DashboardSpend";
 import { getDashboard } from "@/services/dashboard.service";
 import { AppUtil } from "@/utils/AppUtil";
+import { useRouter } from "next/navigation";
 
 const columns: Column[] = [
   { id: "amt", label: "Amount" },
@@ -30,6 +31,8 @@ function page() {
     page: 0,
     rowsPerPage: 25,
   });
+
+  const router = useRouter();
 
   const fetchSpends = async ({ limit = 10, skip = 0 }) => {
     dispact({ type: ApiContextType.START_FETCH_SPEND });
@@ -100,6 +103,18 @@ function page() {
     });
   };
 
+  const handleOnEdit = (row: any): void => {
+    router.push(`edit/${row._id}`);
+  };
+
+  const handleOnDelete = async (row: any) => {
+    const response = await deleteSpend(row._id);
+    if (response?.success) {
+      fetchSpends({});
+      fetchDashboard();
+    }
+  };
+
   return (
     <>
       <Header />
@@ -129,6 +144,8 @@ function page() {
             rowsPerPage={paginationData.rowsPerPage}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
+            onEdit={handleOnEdit}
+            onDelete={handleOnDelete}
           />
         )}
       </Container>

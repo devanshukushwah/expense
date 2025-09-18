@@ -13,6 +13,7 @@ import {
   TablePagination,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 // Define column type
 export interface Column {
@@ -31,6 +32,8 @@ interface ReusableTableProps<T> {
   rowsPerPage: number;
   onPageChange: (event: unknown, newPage: number) => void;
   onRowsPerPageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onEdit?: (row: any) => void;
+  onDelete?: (row: any) => void;
 }
 
 /**
@@ -47,6 +50,8 @@ const CommonTable = <T extends Record<string, any>>({
   rowsPerPage,
   onPageChange,
   onRowsPerPageChange,
+  onEdit,
+  onDelete,
 }: ReusableTableProps<T>) => {
   return (
     <TableContainer component={Paper} sx={{ boxShadow: 3, borderRadius: 2 }}>
@@ -94,13 +99,26 @@ const CommonTable = <T extends Record<string, any>>({
                 {columns.map((col) =>
                   col.label === "Action" ? (
                     <TableCell key={col.id}>
-                      <IconButton
-                        aria-label="edit"
-                        color="primary"
-                        href={`/edit/${row["_id"]}`}
-                      >
-                        <EditIcon />
-                      </IconButton>
+                      {(onEdit || onDelete) && (
+                        <>
+                          {onEdit && (
+                            <IconButton
+                              onClick={() => onEdit(row)}
+                              color="primary"
+                            >
+                              <EditIcon />
+                            </IconButton>
+                          )}
+                          {onDelete && (
+                            <IconButton
+                              onClick={() => onDelete(row)}
+                              color="error"
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          )}
+                        </>
+                      )}
                     </TableCell>
                   ) : (
                     <TableCell key={col.id} sx={{ color: "#444" }}>

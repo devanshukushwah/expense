@@ -36,3 +36,12 @@ export const updateSpend = async (spendId: string, data) => {
     throw error;
   }
 };
+
+export const deleteSpend = async (spendId: string) => {
+  try {
+    const response = await api.delete(HttpUrlConfig.deleteSpendUrl(spendId));
+    return response?.data;
+  } catch (error) {
+    throw error;
+  }
+};

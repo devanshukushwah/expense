@@ -6,22 +6,11 @@ import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { Category } from "@/collection/Category.collection";
 import { AppCache, CacheScreen } from "@/app/cache/AppCache";
+import moment from "moment-timezone";
+import DateUtil from "@/utils/DateUtil";
 
 export const GET = withAuth(async (request) => {
-  // Get current date
-  const now = new Date();
-  // Start of current month
-  const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-  // End of current month
-  const endDate = new Date(
-    now.getFullYear(),
-    now.getMonth() + 1,
-    0,
-    23,
-    59,
-    59,
-    999
-  );
+  const { startDate, endDate } = DateUtil.getCurrentMonthStartEndDate();
 
   if (AppCache.has(CacheScreen.DASHBOARD, request.user._id)) {
     const dashboard = AppCache.get(CacheScreen.DASHBOARD, request.user._id);
@@ -50,6 +39,7 @@ export const GET = withAuth(async (request) => {
       {
         $match: {
           amt: { $gt: 0 },
+          isDeleted: { $ne: true },
           createdBy: new ObjectId(request.user._id),
           createdAt: {
             $gte: startDate,
@@ -91,6 +81,34 @@ export const GET = withAuth(async (request) => {
       };
     });
   }
+
+  // Today Spends logic
+  const { startDate: todayStartDate, endDate: todayEndDate } =
+    DateUtil.getCurrentDayStartEndDate();
+
+  const todaySpends = await spendCollection
+    .aggregate([
+      {
+        $match: {
+          amt: { $gt: 0 },
+          isDeleted: { $ne: true },
+          createdBy: new ObjectId(request.user._id),
+          createdAt: {
+            $gte: todayStartDate,
+            $lte: todayEndDate,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          todaySpends: { $sum: "$amt" },
+        },
+      },
+    ])
+    .toArray();
+
+  dashboard.todaySpends = todaySpends[0].todaySpends;
 
   AppCache.set(CacheScreen.DASHBOARD, request.user._id, dashboard);
 
