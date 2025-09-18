@@ -10,13 +10,7 @@ import moment from "moment-timezone";
 import DateUtil from "@/utils/DateUtil";
 
 export const GET = withAuth(async (request) => {
-  // Get current month start & end in IST
-  const startOfMonthIST = moment.tz("Asia/Kolkata").startOf("month");
-  const endOfMonthIST = moment.tz("Asia/Kolkata").endOf("month");
-
-  // Convert them to UTC for DB queries
-  const startDate = startOfMonthIST.clone().utc().toDate();
-  const endDate = endOfMonthIST.clone().utc().toDate();
+  const { startDate, endDate } = DateUtil.getCurrentMonthStartEndDate();
 
   if (AppCache.has(CacheScreen.DASHBOARD, request.user._id)) {
     const dashboard = AppCache.get(CacheScreen.DASHBOARD, request.user._id);
@@ -87,6 +81,34 @@ export const GET = withAuth(async (request) => {
       };
     });
   }
+
+  // Today Spends logic
+  const { startDate: todayStartDate, endDate: todayEndDate } =
+    DateUtil.getCurrentDayStartEndDate();
+
+  const todaySpends = await spendCollection
+    .aggregate([
+      {
+        $match: {
+          amt: { $gt: 0 },
+          isDeleted: { $ne: true },
+          createdBy: new ObjectId(request.user._id),
+          createdAt: {
+            $gte: todayStartDate,
+            $lte: todayEndDate,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          todaySpends: { $sum: "$amt" },
+        },
+      },
+    ])
+    .toArray();
+
+  dashboard.todaySpends = todaySpends[0].todaySpends;
 
   AppCache.set(CacheScreen.DASHBOARD, request.user._id, dashboard);
 
