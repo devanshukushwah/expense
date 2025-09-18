@@ -40,7 +40,7 @@ const DashboardSpend = ({ data }) => {
                 <Typography variant="subtitle2" color="text.secondary">
                   {cat.title}
                 </Typography>
-                <Typography variant="subtitle1" fontWeight="bold">
+                <Typography variant="subtitle1">
                   {AppUtil.formatMoney(cat.amt)}
                 </Typography>
               </Card>
