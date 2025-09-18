@@ -27,6 +27,10 @@ export class HttpUrlConfig {
     return `${this.getBaseUrl()}/spends/${spendId}`;
   }
 
+  static deleteSpendUrl(spendId: string) {
+    return `${this.getBaseUrl()}/spends/${spendId}`;
+  }
+
   static getCategoriesUrl() {
     return `${this.getBaseUrl()}/categories`;
   }
