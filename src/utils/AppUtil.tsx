@@ -20,7 +20,7 @@ export class AppUtil {
     }).format(amount);
   }
 
-  static generateKey(...args) {
-    return args.join("");
+  static generateKey(...args): string {
+    return JSON.stringify(args);
   }
 }
