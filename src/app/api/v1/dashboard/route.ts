@@ -34,18 +34,20 @@ export const GET = withAuth(async (request) => {
     AppConstants.COLLECTION.CATEGORIES
   );
 
+  const filter = (startDate, endDate) => ({
+    amt: { $gt: 0 },
+    isDeleted: { $in: [false, null] },
+    createdBy: new ObjectId(request.user._id),
+    createdAt: {
+      $gte: startDate,
+      $lte: endDate,
+    },
+  });
+
   const dashboardArray = await spendCollection
     .aggregate([
       {
-        $match: {
-          amt: { $gt: 0 },
-          isDeleted: { $ne: true },
-          createdBy: new ObjectId(request.user._id),
-          createdAt: {
-            $gte: startDate,
-            $lte: endDate,
-          },
-        },
+        $match: filter(startDate, endDate),
       },
       {
         $group: {
@@ -89,15 +91,7 @@ export const GET = withAuth(async (request) => {
   const todaySpends = await spendCollection
     .aggregate([
       {
-        $match: {
-          amt: { $gt: 0 },
-          isDeleted: { $ne: true },
-          createdBy: new ObjectId(request.user._id),
-          createdAt: {
-            $gte: todayStartDate,
-            $lte: todayEndDate,
-          },
-        },
+        $match: filter(todayStartDate, todayEndDate),
       },
       {
         $group: {
