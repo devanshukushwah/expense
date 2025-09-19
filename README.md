@@ -48,8 +48,7 @@ The application will be available at:
 
 ## 📦 Tech Stack
 
-- **Frontend**: Next.js
-- **Backend**: Node.js / Express.js
+- **Frontend/Backend**: Next.js
 - **Database**: MongoDB
 - **Authentication**: JWT
 
