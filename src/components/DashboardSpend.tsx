@@ -4,6 +4,10 @@ import { Card, CardContent, Divider, Grid, Typography } from "@mui/material";
 
 const DashboardSpend = ({ data }) => {
   const categories = data.categories || [];
+
+  // sort category based on amount
+  categories.sort((a, b) => b.amt - a.amt);
+
   return (
     <Card sx={{ borderRadius: 2, boxShadow: 3, p: 2 }}>
       <CardContent>
