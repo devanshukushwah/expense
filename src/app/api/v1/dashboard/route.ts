@@ -108,7 +108,7 @@ export const GET = withAuth(async (request) => {
     ])
     .toArray();
 
-  dashboard.todaySpends = todaySpends[0].todaySpends;
+  dashboard.todaySpends = todaySpends[0]?.todaySpends;
 
   AppCache.set(CacheScreen.DASHBOARD, request.user._id, dashboard);
 

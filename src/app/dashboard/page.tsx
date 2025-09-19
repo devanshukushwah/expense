@@ -29,7 +29,7 @@ function page() {
   const [paginationData, setPaginationData] = React.useState({
     count: 0,
     page: 0,
-    rowsPerPage: 25,
+    rowsPerPage: 10,
   });
 
   const router = useRouter();
