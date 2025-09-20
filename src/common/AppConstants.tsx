@@ -7,6 +7,7 @@ export const AppConstants = {
     USERS: "users",
     CATEGORIES: "categories",
     DASHBOARD: "dashboard",
+    CACHE: "cache",
   },
   SYSTEM_USER: {
     _id: "000000000000000000000001",

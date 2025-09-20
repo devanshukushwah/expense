@@ -5,20 +5,24 @@ import { withAuth } from "@/lib/withAuth";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { Category } from "@/collection/Category.collection";
-import { AppCache, CacheScreen } from "@/app/cache/AppCache";
-import moment from "moment-timezone";
 import DateUtil from "@/utils/DateUtil";
+import CacheScreen from "@/app/cache/CacheScreen";
+import { MongoCacheGet, MongoCacheSet } from "@/app/cache/MongoCache";
 
 export const GET = withAuth(async (request) => {
   const { startDate, endDate } = DateUtil.getCurrentMonthStartEndDate();
 
-  if (AppCache.has(CacheScreen.DASHBOARD, request.user._id)) {
-    const dashboard = AppCache.get(CacheScreen.DASHBOARD, request.user._id);
+  const cacheValue = await MongoCacheGet(
+    CacheScreen.DASHBOARD,
+    request.user._id
+  );
+
+  if (cacheValue) {
     return new Response(
       JSON.stringify({
         success: true,
         data: {
-          dashboard,
+          dashboard: cacheValue,
         },
       }),
       {
@@ -102,9 +106,9 @@ export const GET = withAuth(async (request) => {
     ])
     .toArray();
 
-  dashboard.todaySpends = todaySpends[0]?.todaySpends;
+  dashboard.todaySpends = todaySpends[0]?.todaySpends || 0;
 
-  AppCache.set(CacheScreen.DASHBOARD, request.user._id, dashboard);
+  await MongoCacheSet(CacheScreen.DASHBOARD, request.user._id, dashboard);
 
   return new Response(
     JSON.stringify({

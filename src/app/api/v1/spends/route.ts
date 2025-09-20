@@ -6,7 +6,8 @@ import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { Spend } from "@/collection/Spend.collection";
 import type { NextRequest } from "next/server";
-import { AppCache, CacheScreen } from "@/app/cache/AppCache";
+import CacheScreen from "@/app/cache/CacheScreen";
+import { MongoCacheInvalidate } from "@/app/cache/MongoCache";
 
 export const GET = withAuth(
   async (
@@ -91,7 +92,7 @@ export const POST = withAuth(
 
     newSpend._id = result.insertedId;
 
-    AppCache.invalidate(CacheScreen.DASHBOARD, request.user._id);
+    await MongoCacheInvalidate(CacheScreen.DASHBOARD, request.user._id);
 
     return new Response(
       JSON.stringify({

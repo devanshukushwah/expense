@@ -5,7 +5,8 @@ import { withAuth } from "@/lib/withAuth";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { Spend } from "@/collection/Spend.collection";
-import { AppCache, CacheScreen } from "@/app/cache/AppCache";
+import CacheScreen from "@/app/cache/CacheScreen";
+import { MongoCacheInvalidate } from "@/app/cache/MongoCache";
 
 export const PUT = withAuth(async (request, { params }): Promise<Response> => {
   const client = await clientPromise;
@@ -52,7 +53,7 @@ export const PUT = withAuth(async (request, { params }): Promise<Response> => {
     { $set: updatedSpend }
   );
 
-  AppCache.invalidate(CacheScreen.DASHBOARD, request.user._id);
+  await MongoCacheInvalidate(CacheScreen.DASHBOARD, request.user._id);
 
   return new Response(
     JSON.stringify({
