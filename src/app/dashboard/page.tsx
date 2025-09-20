@@ -7,7 +7,7 @@ import Header from "@/components/Header";
 import Loader from "@/components/Loader";
 import { useApiDispatch, useApiState } from "@/context/ApiStateContext";
 import { deleteSpend, getSpends } from "@/services/spends.service";
-import { Container, Divider } from "@mui/material";
+import { Container } from "@mui/material";
 import React from "react";
 import DashboardSpend from "@/components/DashboardSpend";
 import { getDashboard } from "@/services/dashboard.service";
@@ -31,7 +31,6 @@ function page() {
     page: 0,
     rowsPerPage: 10,
   });
-
   const router = useRouter();
 
   const fetchSpends = async ({ limit = 10, skip = 0 }) => {
@@ -70,7 +69,6 @@ function page() {
   };
 
   React.useEffect(() => {
-    fetchSpends({});
     fetchDashboard();
   }, []);
 

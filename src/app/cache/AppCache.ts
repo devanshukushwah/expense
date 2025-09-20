@@ -1,9 +1,5 @@
 import { AppUtil } from "@/utils/AppUtil";
-
-export enum CacheScreen {
-  DASHBOARD = "DASHBOARD",
-  CATEGORIES = "CATEGORIES",
-}
+import CacheScreen from "./CacheScreen";
 
 export class AppCache {
   private static cache = new Map<string, any>();
