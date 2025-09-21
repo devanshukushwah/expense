@@ -30,7 +30,7 @@ export const GET = withAuth(
 
     const filter = {
       createdBy: new ObjectId(user._id),
-      isDeleted: { $ne: true },
+      isDeleted: { $in: [false, null] },
     };
 
     const spends = await collection
