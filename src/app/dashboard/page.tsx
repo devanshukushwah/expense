@@ -13,6 +13,8 @@ import DashboardSpend from "@/components/DashboardSpend";
 import { getDashboard } from "@/services/dashboard.service";
 import { AppUtil } from "@/utils/AppUtil";
 import { useRouter } from "next/navigation";
+import ConfirmDialog from "@/components/ConfirmDialog";
+import { Spend } from "@/collection/Spend.collection";
 
 const columns: Column[] = [
   { id: "amt", label: "Amount" },
@@ -22,7 +24,7 @@ const columns: Column[] = [
 ];
 
 function page() {
-  const { loading } = useApiState();
+  const { loading, dialog } = useApiState();
   const dispact = useApiDispatch();
   const [spends, setSpends] = React.useState([]);
   const [dashboard, setDashboard] = React.useState({});
@@ -110,7 +112,21 @@ function page() {
     if (response?.success) {
       fetchSpends({});
       fetchDashboard();
+      dispact({ type: ApiContextType.CLOSE_DIALOG });
     }
+  };
+
+  const handleOpenDeleteDialog = (row: Spend) => {
+    dispact({
+      type: ApiContextType.OPEN_DIALOG,
+      payload: {
+        onConfirmCallback: () => {
+          handleOnDelete(row);
+        },
+        message: `Are you sure want to delete expense of ${row.amt}`,
+        title: "Delete Confirm",
+      },
+    });
   };
 
   return (
@@ -143,10 +159,11 @@ function page() {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
             onEdit={handleOnEdit}
-            onDelete={handleOnDelete}
+            onDelete={handleOpenDeleteDialog}
           />
         )}
       </Container>
+      <ConfirmDialog />
     </>
   );
 }
