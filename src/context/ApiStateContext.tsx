@@ -13,6 +13,11 @@ type ApiState = {
     updateSpend: boolean;
   };
   categories: Category[];
+  dialog: {
+    isOpen: boolean;
+    data: any;
+    onConfirmCallback: () => void;
+  };
 };
 
 type ApiAction =
@@ -22,6 +27,10 @@ type ApiAction =
   | {
       type: ApiContextType.SET_CATEGORIES;
       payload: { categories: Category[] };
+    }
+  | {
+      type: ApiContextType.OPEN_DIALOG;
+      payload: { data?: any; onConfirmCallback: () => void };
     };
 
 // Add other action types here as needed
@@ -35,6 +44,11 @@ const initialState: ApiState = {
     updateSpend: false,
   },
   categories: [],
+  dialog: {
+    isOpen: false,
+    data: null,
+    onConfirmCallback: () => {},
+  },
 };
 
 function apiReducer(state: ApiState, action: ApiAction): ApiState {
@@ -126,6 +140,27 @@ function apiReducer(state: ApiState, action: ApiAction): ApiState {
       return {
         ...state,
         categories: action.payload.categories,
+      };
+
+    case ApiContextType.OPEN_DIALOG:
+      return {
+        ...state,
+        dialog: {
+          ...state.dialog,
+          isOpen: true,
+          data: action.payload.data,
+          onConfirmCallback: action.payload.onConfirmCallback,
+        },
+      };
+    case ApiContextType.CLOSE_DIALOG:
+      return {
+        ...state,
+        dialog: {
+          ...state.dialog,
+          isOpen: false,
+          data: null,
+          onConfirmCallback: () => {},
+        },
       };
     default:
       throw new Error(`Unhandled action: ${action.type}`);
