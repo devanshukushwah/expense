@@ -1,6 +1,6 @@
 export class HttpUrlConfig {
   static getBaseUrl() {
-    return process.env.NEXT_PUBLIC_API_BASE_URL || "/api/v1";
+    return "api/v1";
   }
 
   static getLoginUrl() {
