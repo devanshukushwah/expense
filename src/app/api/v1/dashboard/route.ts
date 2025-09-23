@@ -14,7 +14,8 @@ export const GET = withAuth(async (request) => {
 
   const cacheValue = await MongoCacheGet(
     CacheScreen.DASHBOARD,
-    request.user._id
+    request.user._id,
+    undefined
   );
 
   if (cacheValue) {
@@ -108,7 +109,12 @@ export const GET = withAuth(async (request) => {
 
   dashboard.todaySpends = todaySpends[0]?.todaySpends || 0;
 
-  await MongoCacheSet(CacheScreen.DASHBOARD, request.user._id, dashboard);
+  await MongoCacheSet(
+    CacheScreen.DASHBOARD,
+    request.user._id,
+    undefined,
+    dashboard
+  );
 
   return new Response(
     JSON.stringify({
