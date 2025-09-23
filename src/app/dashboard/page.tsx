@@ -14,6 +14,7 @@ import { getDashboard } from "@/services/dashboard.service";
 import { AppUtil } from "@/utils/AppUtil";
 import { useRouter } from "next/navigation";
 import ConfirmDialog from "@/components/ConfirmDialog";
+import { Spend } from "@/collection/Spend.collection";
 
 const columns: Column[] = [
   { id: "amt", label: "Amount" },
@@ -115,13 +116,15 @@ function page() {
     }
   };
 
-  const handleOpenDeleteDialog = (row: any) => {
+  const handleOpenDeleteDialog = (row: Spend) => {
     dispact({
       type: ApiContextType.OPEN_DIALOG,
       payload: {
         onConfirmCallback: () => {
           handleOnDelete(row);
         },
+        message: `Are you sure want to delete expense of ${row.amt}`,
+        title: "Delete Confirm",
       },
     });
   };
@@ -160,7 +163,7 @@ function page() {
           />
         )}
       </Container>
-      <ConfirmDialog open={true} />
+      <ConfirmDialog />
     </>
   );
 }

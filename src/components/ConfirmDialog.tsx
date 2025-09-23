@@ -10,19 +10,12 @@ import {
 import { useApiDispatch, useApiState } from "@/context/ApiStateContext";
 import { ApiContextType } from "@/common/ApiContextType";
 
-interface ConfirmDialogProps {
-  open: boolean;
-  title?: string;
-  message?: string;
-}
-
-export default function ConfirmDialog({
-  open,
-  title = "Confirm",
-  message = "Are you sure you want to delete this item?",
-}: ConfirmDialogProps) {
+export default function ConfirmDialog() {
   const { dialog } = useApiState();
   const dispatch = useApiDispatch();
+  const title = dialog?.title || "Confirm";
+  const message =
+    dialog?.message || "Are you sure you want to delete this item?";
 
   const handleClose = () => {
     dispatch({ type: ApiContextType.CLOSE_DIALOG });

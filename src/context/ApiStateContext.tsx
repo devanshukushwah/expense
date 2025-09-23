@@ -15,7 +15,9 @@ type ApiState = {
   categories: Category[];
   dialog: {
     isOpen: boolean;
-    data: any;
+    data?: any;
+    title?: string;
+    message?: string;
     onConfirmCallback: () => void;
   };
 };
@@ -30,7 +32,12 @@ type ApiAction =
     }
   | {
       type: ApiContextType.OPEN_DIALOG;
-      payload: { data?: any; onConfirmCallback: () => void };
+      payload: {
+        data?: any;
+        title?: string;
+        message?: string;
+        onConfirmCallback: () => void;
+      };
     };
 
 // Add other action types here as needed
@@ -47,6 +54,8 @@ const initialState: ApiState = {
   dialog: {
     isOpen: false,
     data: null,
+    title: undefined,
+    message: undefined,
     onConfirmCallback: () => {},
   },
 };
@@ -148,6 +157,8 @@ function apiReducer(state: ApiState, action: ApiAction): ApiState {
         dialog: {
           ...state.dialog,
           isOpen: true,
+          title: action.payload.title,
+          message: action.payload.message,
           data: action.payload.data,
           onConfirmCallback: action.payload.onConfirmCallback,
         },
@@ -159,6 +170,8 @@ function apiReducer(state: ApiState, action: ApiAction): ApiState {
           ...state.dialog,
           isOpen: false,
           data: null,
+          title: undefined,
+          message: undefined,
           onConfirmCallback: () => {},
         },
       };
