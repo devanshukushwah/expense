@@ -1,6 +1,6 @@
 export class HttpUrlConfig {
   static getBaseUrl() {
-    return "api/v1";
+    return "/api/v1";
   }
 
   static getLoginUrl() {
