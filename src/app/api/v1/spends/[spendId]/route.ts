@@ -116,6 +116,8 @@ export const DELETE = withAuth(async (request, { params }) => {
     });
   }
 
+  await MongoCacheInvalidate(CacheScreen.DASHBOARD, request.user._id);
+
   return new Response(
     JSON.stringify({ success: true, message: "Spend deleted successfully" }),
     {
