@@ -31,7 +31,6 @@ Create a `.env` file in the root directory and add the following:
 ```env
 MONGODB_URI=mongodb+srv://host-url.com
 JWT_SECRET=my-secret
-NEXT_PUBLIC_API_BASE_URL=http://localhost:3000/api/v1
 NODE_ENV=development
 ```
 
