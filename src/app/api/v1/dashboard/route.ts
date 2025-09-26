@@ -18,7 +18,7 @@ export const GET = withAuth(async (request) => {
     DateUtil.getCurrentDayStartEndDate();
 
   // cache key (all dynamic values that can change the result should be part of the key)
-  const key = AppUtil.generateKey(
+  const cacheKey = AppUtil.generateKey(
     startDate,
     endDate,
     todayStartDate,
@@ -28,7 +28,7 @@ export const GET = withAuth(async (request) => {
   const cacheValue = await MongoCacheGet(
     CacheScreen.DASHBOARD,
     request.user._id,
-    key
+    cacheKey
   );
 
   if (cacheValue) {
@@ -122,7 +122,7 @@ export const GET = withAuth(async (request) => {
   await MongoCacheSet(
     CacheScreen.DASHBOARD,
     request.user._id,
-    undefined,
+    cacheKey,
     dashboard
   );
 
