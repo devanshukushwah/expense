@@ -3,8 +3,8 @@
 import { AppConstants } from "@/common/AppConstants";
 import { withAuth } from "@/lib/withAuth";
 import clientPromise from "@/lib/mongodb";
-import { AppCache } from "@/app/cache/AppCache";
-import CacheScreen from "@/app/cache/CacheScreen";
+import { AppCache } from "@/cache/AppCache";
+import CacheScreen from "@/cache/CacheScreen";
 
 export const GET = withAuth(async () => {
   if (AppCache.has(CacheScreen.CATEGORIES, AppConstants.NO_VALUE)) {

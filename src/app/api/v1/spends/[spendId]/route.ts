@@ -5,8 +5,8 @@ import { withAuth } from "@/lib/withAuth";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { Spend } from "@/collection/Spend.collection";
-import CacheScreen from "@/app/cache/CacheScreen";
-import { MongoCacheInvalidate } from "@/app/cache/MongoCache";
+import CacheScreen from "@/cache/CacheScreen";
+import { MongoCacheInvalidate } from "@/cache/MongoCache";
 
 export const PUT = withAuth(async (request, { params }): Promise<Response> => {
   const client = await clientPromise;

@@ -6,8 +6,8 @@ import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { Category } from "@/collection/Category.collection";
 import DateUtil from "@/utils/DateUtil";
-import CacheScreen from "@/app/cache/CacheScreen";
-import { MongoCacheGet, MongoCacheSet } from "@/app/cache/MongoCache";
+import CacheScreen from "@/cache/CacheScreen";
+import { MongoCacheGet, MongoCacheSet } from "@/cache/MongoCache";
 import { AppUtil } from "@/utils/AppUtil";
 
 export const GET = withAuth(async (request) => {
