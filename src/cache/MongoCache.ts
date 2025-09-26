@@ -4,6 +4,7 @@ import { Cache } from "@/collection/Cache.collection";
 import { AppConstants } from "@/common/AppConstants";
 import clientPromise from "@/lib/mongodb";
 import CacheScreen from "./CacheScreen";
+import CryptoJs from "@/utils/CryptoJs";
 
 export async function MongoCacheGet(
   screen: CacheScreen,

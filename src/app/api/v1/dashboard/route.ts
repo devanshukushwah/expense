@@ -6,16 +6,29 @@ import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { Category } from "@/collection/Category.collection";
 import DateUtil from "@/utils/DateUtil";
-import CacheScreen from "@/app/cache/CacheScreen";
-import { MongoCacheGet, MongoCacheSet } from "@/app/cache/MongoCache";
+import CacheScreen from "@/cache/CacheScreen";
+import { MongoCacheGet, MongoCacheSet } from "@/cache/MongoCache";
+import { AppUtil } from "@/utils/AppUtil";
 
 export const GET = withAuth(async (request) => {
   const { startDate, endDate } = DateUtil.getCurrentMonthStartEndDate();
 
+  // Today Spends logic dates
+  const { startDate: todayStartDate, endDate: todayEndDate } =
+    DateUtil.getCurrentDayStartEndDate();
+
+  // cache key (all dynamic values that can change the result should be part of the key)
+  const cacheKey = AppUtil.generateKey(
+    startDate,
+    endDate,
+    todayStartDate,
+    todayEndDate
+  );
+
   const cacheValue = await MongoCacheGet(
     CacheScreen.DASHBOARD,
     request.user._id,
-    undefined
+    cacheKey
   );
 
   if (cacheValue) {
@@ -89,10 +102,7 @@ export const GET = withAuth(async (request) => {
     });
   }
 
-  // Today Spends logic
-  const { startDate: todayStartDate, endDate: todayEndDate } =
-    DateUtil.getCurrentDayStartEndDate();
-
+  // Today spends logic
   const todaySpends = await spendCollection
     .aggregate([
       {
@@ -112,7 +122,7 @@ export const GET = withAuth(async (request) => {
   await MongoCacheSet(
     CacheScreen.DASHBOARD,
     request.user._id,
-    undefined,
+    cacheKey,
     dashboard
   );
 
