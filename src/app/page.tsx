@@ -1,15 +1,12 @@
-import { AppConstants } from "@/common/AppConstants";
-
-import clientPromise from "@/lib/mongodb";
-import Home from "../pages/Home";
+import * as categoryService from "@/backend/service/category.service";
 import SerializeUtil from "@/utils/SerializeUtil";
+import Home from "../pages/Home";
 
 export default async function Page() {
-  const client = await clientPromise;
-  const db = client.db(); // default DB from connection string
-  const collection = db.collection(AppConstants.COLLECTION.CATEGORIES);
-  const categories = await collection.find().sort({ createdAt: -1 }).toArray();
+  // Fetch categories from the database
+  const categories = await categoryService.getCategories();
 
+  // Serialize categories to ensure they are JSON-safe
   const serializeCategories = SerializeUtil.serializeDocs(categories);
 
   return <Home categories={serializeCategories} />;

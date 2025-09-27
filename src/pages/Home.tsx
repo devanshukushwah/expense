@@ -5,7 +5,7 @@ import { AppConstants } from "@/common/AppConstants";
 import { spendDefaultValue } from "@/common/DefaultValue";
 import Header from "@/components/Header";
 import Spend from "@/components/Spend";
-import { createSpend } from "@/services/spends.service";
+import { createSpend } from "@/ui-service/spends.service";
 import LazyInvoke from "@/utils/LazyInvoke";
 import { Container } from "@mui/material";
 import React from "react";
