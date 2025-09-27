@@ -2,6 +2,7 @@ import { AppConstants } from "@/common/AppConstants";
 
 import clientPromise from "@/lib/mongodb";
 import Home from "../pages/Home";
+import SerializeUtil from "@/utils/SerializeUtil";
 
 export default async function Page() {
   const client = await clientPromise;
@@ -9,5 +10,7 @@ export default async function Page() {
   const collection = db.collection(AppConstants.COLLECTION.CATEGORIES);
   const categories = await collection.find().sort({ createdAt: -1 }).toArray();
 
-  return <Home categories={categories} />;
+  const serializeCategories = SerializeUtil.serializeDocs(categories);
+
+  return <Home categories={serializeCategories} />;
 }
