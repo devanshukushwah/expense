@@ -5,6 +5,7 @@ import { withAuth } from "@/lib/withAuth";
 import clientPromise from "@/lib/mongodb";
 import { AppCache } from "@/cache/AppCache";
 import CacheScreen from "@/cache/CacheScreen";
+import * as categoriesDAO from "@/backend/repo/category.repo";
 
 export const GET = withAuth(async () => {
   if (AppCache.has(CacheScreen.CATEGORIES, AppConstants.NO_VALUE)) {
@@ -21,11 +22,7 @@ export const GET = withAuth(async () => {
     );
   }
 
-  const client = await clientPromise;
-  const db = client.db(); // default DB from connection string
-  const collection = db.collection(AppConstants.COLLECTION.CATEGORIES);
-
-  const categories = await collection.find().sort({ createdAt: -1 }).toArray();
+  const categories = await categoriesDAO.getCategories();
 
   AppCache.set(CacheScreen.CATEGORIES, AppConstants.NO_VALUE, categories);
 

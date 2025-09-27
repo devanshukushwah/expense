@@ -1,5 +1,7 @@
 import { Spend } from "@/collection/Spend.collection";
+import { spendDefaultValue } from "@/common/DefaultValue";
 import {
+  Alert,
   Button,
   ListItemText,
   MenuItem,
@@ -8,7 +10,6 @@ import {
 } from "@mui/material";
 import React, { useEffect } from "react";
 import { AppConstants } from "../common/AppConstants";
-import { spendDefaultValue } from "@/common/DefaultValue";
 
 function Spend({
   categories,
@@ -16,6 +17,7 @@ function Spend({
   loading,
   item = null,
   buttonLabel = null,
+  errorMessage = "",
 }) {
   const [spend, setSpend] = React.useState<Spend>(spendDefaultValue());
 
@@ -87,6 +89,9 @@ function Spend({
         onChange={handleChange}
         size="small"
       />
+
+      {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+
       <Button
         onClick={handleSubmit}
         variant="contained"
