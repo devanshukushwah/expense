@@ -88,7 +88,7 @@ export const GET = withAuth(async (request) => {
     ])
     .toArray();
 
-  const dashboard = dashboardArray[0];
+  const dashboard = dashboardArray[0] || {};
 
   if (dashboard?.categories?.length) {
     const categories = await categoryCollection.find({}).toArray();
