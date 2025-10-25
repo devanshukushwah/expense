@@ -15,11 +15,13 @@ import { AppUtil } from "@/utils/AppUtil";
 import { useRouter } from "next/navigation";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import { Spend } from "@/collection/Spend.collection";
+import DateUtil from "@/utils/DateUtil";
 
 const columns: Column[] = [
   { id: "amt", label: "Amount" },
   { id: "cat", label: "Category" },
   { id: "desc", label: "Description" },
+  { id: "createdAt", label: "Date" },
   { id: "null", label: "Action" },
 ];
 
@@ -53,6 +55,7 @@ function page() {
       const formattedSpends = spends.map((spend) => ({
         ...spend,
         amt: AppUtil.formatMoney(spend.amt),
+        createdAt: DateUtil.convertUTCToISTDate(spend.createdAt),
       }));
 
       setSpends(formattedSpends || []);

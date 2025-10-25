@@ -15,6 +15,12 @@ class DateUtil {
     return istTime.format(); // Default ISO format
   }
 
+  // utc to ist date in AM/PM format
+  static convertUTCToISTDate(utcDate: Date): string {
+    const istDate = moment(utcDate).tz("Asia/Kolkata");
+    return istDate.format("DD-MM-YYYY hh:mm A");
+  }
+
   static getCurrentMonthStartEndDate() {
     // Get current month start & end in IST
     const startOfMonthIST = moment.tz("Asia/Kolkata").startOf("month");
