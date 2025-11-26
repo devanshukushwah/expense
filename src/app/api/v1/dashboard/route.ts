@@ -8,14 +8,34 @@ import { Category } from "@/collection/Category.collection";
 import DateUtil from "@/utils/DateUtil";
 import CacheScreen from "@/app/cache/CacheScreen";
 import { MongoCacheGet, MongoCacheSet } from "@/app/cache/MongoCache";
+import { AppUtil } from "@/utils/AppUtil";
 
 export const GET = withAuth(async (request) => {
-  const { startDate, endDate } = DateUtil.getCurrentMonthStartEndDate();
+  const { searchParams } = new URL(request.url);
+  const month = searchParams.get("month");
+  const year = searchParams.get("year");
+  let startDate;
+  let endDate;
+
+  if (month && year) {
+    const monthInt = parseInt(month as string, 10);
+    const yearInt = parseInt(year as string, 10);
+    const { startDate: monthStartDate, endDate: monthEndDate } =
+      DateUtil.getMonthStartEndDate(monthInt, yearInt);
+    startDate = monthStartDate;
+    endDate = monthEndDate;
+    console.log("startDate, endDate", startDate, endDate);
+  } else {
+    const { startDate: currentMonthStartDate, endDate: currentMonthEndDate } =
+      DateUtil.getCurrentMonthStartEndDate();
+    startDate = currentMonthStartDate;
+    endDate = currentMonthEndDate;
+  }
 
   const cacheValue = await MongoCacheGet(
     CacheScreen.DASHBOARD,
     request.user._id,
-    undefined
+    AppUtil.generateKey(startDate, endDate)
   );
 
   if (cacheValue) {
@@ -75,7 +95,7 @@ export const GET = withAuth(async (request) => {
     ])
     .toArray();
 
-  const dashboard = dashboardArray[0];
+  const dashboard = dashboardArray[0] || {};
 
   if (dashboard?.categories?.length) {
     const categories = await categoryCollection.find({}).toArray();
@@ -112,7 +132,7 @@ export const GET = withAuth(async (request) => {
   await MongoCacheSet(
     CacheScreen.DASHBOARD,
     request.user._id,
-    undefined,
+    AppUtil.generateKey(startDate, endDate),
     dashboard
   );
 
