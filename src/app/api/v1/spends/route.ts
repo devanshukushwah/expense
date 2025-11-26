@@ -6,8 +6,8 @@ import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { Spend } from "@/collection/Spend.collection";
 import type { NextRequest } from "next/server";
-import CacheScreen from "@/app/cache/CacheScreen";
-import { MongoCacheInvalidate } from "@/app/cache/MongoCache";
+import CacheScreen from "@/cache/CacheScreen";
+import { MongoCacheInvalidate } from "@/cache/MongoCache";
 
 export const GET = withAuth(
   async (

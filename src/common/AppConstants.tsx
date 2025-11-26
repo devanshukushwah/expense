@@ -19,4 +19,5 @@ export const AppConstants = {
   ASC: "ASC",
   DESC: "DESC",
   CREATED_AT: "createdAt",
+  DB_ERROR: "Database error",
 };

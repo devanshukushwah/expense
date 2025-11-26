@@ -41,12 +41,28 @@ const DashboardSpend = ({ data }) => {
                 variant="outlined"
                 sx={{ p: 2, borderRadius: 2, textAlign: "center" }}
               >
-                <Typography variant="subtitle2" color="text.secondary">
-                  {cat.title}
-                </Typography>
-                <Typography variant="subtitle1">
-                  {AppUtil.formatMoney(cat.amt)}
-                </Typography>
+                <Grid
+                  container
+                  direction={{ xs: "row", sm: "column" }}
+                  alignItems="center"
+                  justifyContent="center"
+                  spacing={0.5}
+                >
+                  <Grid item>
+                    <Typography
+                      variant="subtitle2"
+                      color="text.secondary"
+                      sx={{ mr: { xs: 1, sm: 0 } }}
+                    >
+                      {cat.title}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="subtitle1">
+                      {AppUtil.formatMoney(cat.amt)}
+                    </Typography>
+                  </Grid>
+                </Grid>
               </Card>
             </Grid>
           ))}

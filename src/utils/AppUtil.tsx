@@ -1,3 +1,5 @@
+import CryptoJs from "./CryptoJs";
+
 export class AppUtil {
   /**
    * Format number into money string
@@ -21,6 +23,7 @@ export class AppUtil {
   }
 
   static generateKey(...args): string {
-    return JSON.stringify(args);
+    const key = JSON.stringify(args);
+    return CryptoJs.hashSHA256(key);
   }
 }
