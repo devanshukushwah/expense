@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import { Spend } from "@/collection/Spend.collection";
 import DateUtil from "@/utils/DateUtil";
+import MonthYearWithIcon from "@/components/MonthYearWithIcon";
 
 const columns: Column[] = [
   { id: "amt", label: "Amount" },
@@ -35,6 +36,13 @@ function page() {
     page: 0,
     rowsPerPage: 10,
   });
+
+  const date = new Date();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+
+  const [monthYear, setMonthYear] = React.useState({ month, year });
+
   const router = useRouter();
 
   const fetchSpends = async ({ limit = 10, skip = 0 }) => {
@@ -65,7 +73,7 @@ function page() {
 
   const fetchDashboard = async () => {
     dispact({ type: ApiContextType.START_FETCH_DASHBOARD });
-    const response = await getDashboard();
+    const response = await getDashboard(monthYear);
     if (response?.success) {
       const dashbaord = response?.data?.dashboard || {};
       setDashboard(dashbaord);
@@ -75,7 +83,7 @@ function page() {
 
   React.useEffect(() => {
     fetchDashboard();
-  }, []);
+  }, [monthYear]);
 
   const handlePaginationChange = () => {
     const { page, rowsPerPage } = paginationData;
@@ -132,6 +140,14 @@ function page() {
     });
   };
 
+  const handleMonthYearSubmit = ({ month, year }) => {
+    if (!month || !year) {
+      console.error("Month and Year are required");
+      return;
+    }
+    setMonthYear({ month, year });
+  };
+
   return (
     <>
       <Header />
@@ -147,7 +163,12 @@ function page() {
         {loading.fetchDashboard ? (
           <Loader times={1} height={200} />
         ) : (
-          <DashboardSpend data={dashboard} />
+          <DashboardSpend data={dashboard}>
+            <MonthYearWithIcon
+              monthYear={monthYear}
+              onSumit={handleMonthYearSubmit}
+            />
+          </DashboardSpend>
         )}
 
         {loading.fetchSpend ? (

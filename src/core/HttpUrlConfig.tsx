@@ -35,7 +35,7 @@ export class HttpUrlConfig {
     return `${this.getBaseUrl()}/categories`;
   }
 
-  static getDashboardUrl() {
-    return `${this.getBaseUrl()}/dashboard`;
+  static getDashboardUrl({ month, year }) {
+    return `${this.getBaseUrl()}/dashboard?month=${month}&year=${year}`;
   }
 }
