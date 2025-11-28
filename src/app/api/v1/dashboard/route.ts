@@ -11,7 +11,25 @@ import { MongoCacheGet, MongoCacheSet } from "@/cache/MongoCache";
 import { AppUtil } from "@/utils/AppUtil";
 
 export const GET = withAuth(async (request) => {
-  const { startDate, endDate } = DateUtil.getCurrentMonthStartEndDate();
+  const { searchParams } = new URL(request.url);
+  const month = searchParams.get("month");
+  const year = searchParams.get("year");
+  let startDate;
+  let endDate;
+
+  if (month && year) {
+    const monthInt = parseInt(month as string, 10);
+    const yearInt = parseInt(year as string, 10);
+    const { startDate: monthStartDate, endDate: monthEndDate } =
+      DateUtil.getMonthStartEndDate(monthInt, yearInt);
+    startDate = monthStartDate;
+    endDate = monthEndDate;
+  } else {
+    const { startDate: currentMonthStartDate, endDate: currentMonthEndDate } =
+      DateUtil.getCurrentMonthStartEndDate();
+    startDate = currentMonthStartDate;
+    endDate = currentMonthEndDate;
+  }
 
   // Today Spends logic dates
   const { startDate: todayStartDate, endDate: todayEndDate } =

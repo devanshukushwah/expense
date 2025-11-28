@@ -2,7 +2,7 @@ import { AppConstants } from "@/common/AppConstants";
 import { AppUtil } from "@/utils/AppUtil";
 import { Card, CardContent, Divider, Grid, Typography } from "@mui/material";
 
-const DashboardSpend = ({ data }) => {
+const DashboardSpend = ({ data, children }) => {
   const categories = data.categories || [];
 
   // sort category based on amount
@@ -12,8 +12,8 @@ const DashboardSpend = ({ data }) => {
     <Card sx={{ borderRadius: 2, boxShadow: 3, p: 2 }}>
       <CardContent>
         {/* Top section: Today + Total */}
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
+        <Grid container alignItems="center" spacing={2}>
+          <Grid item xs={4}>
             <Typography variant="subtitle2" color="text.secondary">
               Today’s Spends
             </Typography>
@@ -21,13 +21,20 @@ const DashboardSpend = ({ data }) => {
               {AppUtil.formatMoney(data?.todaySpends)}
             </Typography>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={4}>
             <Typography variant="subtitle2" color="text.secondary">
               Month's Spends
             </Typography>
             <Typography variant="h6" color="error">
               {AppUtil.formatMoney(data?.totalSpends)}
             </Typography>
+          </Grid>
+          <Grid
+            item
+            xs={4}
+            sx={{ display: "flex", justifyContent: "flex-end" }}
+          >
+            {children}
           </Grid>
         </Grid>
 
